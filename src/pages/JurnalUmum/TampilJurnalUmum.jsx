@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, TextField, Typography, Divider, Pagination } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Typography,
+  Divider,
+  Pagination,
+  Button,
+  ButtonGroup
+} from "@mui/material";
 import { ShowTableJurnalUmum } from "../../components/ShowTable";
 import { Loader, usePagination, ButtonModifier } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
+import DownloadIcon from "@mui/icons-material/Download";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const TampilJurnalUmum = () => {
   const location = useLocation();
@@ -17,7 +28,18 @@ const TampilJurnalUmum = () => {
   const [totalKredit, setTotalKredit] = useState("");
   const [balance, setBalance] = useState("");
   const [aJurnalUmums, setAJurnalUmums] = useState([]);
+  const [aJurnalUmumForDoc, setAJurnalUmumForDoc] = useState([]);
+  const [aJurnalUmumForDocDisplay, setAJurnalUmumForDocDisplay] = useState([]);
   const navigate = useNavigate();
+
+  const columns = [
+    { title: "Tanggal", field: "tanggal" },
+    { title: "Kode Account", field: "kodeAccount" },
+    { title: "Nama Account", field: "namaAccount" },
+    { title: "Keterangan", field: "keterangan" },
+    { title: "Debet", field: "debet" },
+    { title: "Kredit", field: "kredit" }
+  ];
 
   const [loading, setLoading] = useState(false);
   let [page, setPage] = useState(1);
@@ -38,6 +60,7 @@ const TampilJurnalUmum = () => {
 
   useEffect(() => {
     getAJurnalUmums();
+    getAJurnalUmumForDoc();
     id && getUserById();
   }, [id]);
 
@@ -45,6 +68,22 @@ const TampilJurnalUmum = () => {
     setLoading(true);
     const response = await axios.get(`${tempUrl}/aJurnalUmums`);
     setAJurnalUmums(response.data);
+    setLoading(false);
+  };
+
+  const getAJurnalUmumForDoc = async () => {
+    setLoading(true);
+    let tempDebet;
+    let tempKredit;
+    const response = await axios.get(`${tempUrl}/aJurnalUmumForDoc`);
+    setAJurnalUmumForDoc(response.data);
+    for (let i = 0; i < aJurnalUmumForDoc.length; i++) {
+      tempDebet = aJurnalUmumForDoc[i].debet.toLocaleString();
+      tempKredit = aJurnalUmumForDoc[i].kredit.toLocaleString();
+      aJurnalUmumForDoc[i].debet = tempDebet;
+      aJurnalUmumForDoc[i].kredit = tempKredit;
+    }
+    setAJurnalUmumForDocDisplay(aJurnalUmumForDoc);
     setLoading(false);
   };
 
@@ -82,6 +121,26 @@ const TampilJurnalUmum = () => {
     }
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text(`PT INDUSTRI CONTOH`, 15, 10);
+    doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
+    doc.setFontSize(16);
+    doc.text(`BUKTI JURNAL`, 80, 30);
+    doc.setFontSize(12);
+    doc.text(`No.Bukti : ${noJurnalUmum}`, 15, 40);
+    doc.text(`Tanggal : ${tanggal}`, 15, 45);
+    doc.text(`Total Debet : ${totalDebet.toLocaleString()}`, 15, 50);
+    doc.text(`Total Kredit : ${totalKredit.toLocaleString()}`, 15, 55);
+    doc.autoTable({
+      margin: { top: 60 },
+      columns: columns.map((col) => ({ ...col, dataKey: col.field })),
+      body: aJurnalUmumForDocDisplay
+    });
+    doc.save(`jurnalUmum-${noJurnalUmum}.pdf`);
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -107,6 +166,23 @@ const TampilJurnalUmum = () => {
           editLink={`/daftarJurnalUmum/jurnalUmum/${id}/edit`}
           deleteUser={deleteUser}
         />
+      </Box>
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center"
+        }}
+      >
+        <ButtonGroup variant="text" color="secondary">
+          <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
+            PDF
+          </Button>
+          <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
+            EXCEL
+          </Button>
+        </ButtonGroup>
       </Box>
       <Divider sx={{ pt: 4 }} />
       <Box

@@ -13,15 +13,15 @@ const TampilAJurnalUmum = () => {
   const { screenSize } = useStateContext();
   const [noJurnalUmum, setNoJurnalUmum] = useState("");
   const [kodeAccount, setKodeAccount] = useState("");
+  const [namaAccount, setNamaAccount] = useState("");
+  const [tanggal, setTanggal] = useState("");
   const [keterangan, setKeterangan] = useState("");
   const [debet, setDebet] = useState(0);
   const [kredit, setKredit] = useState(0);
-  const [bukuBesars, setBukuBesars] = useState([]);
   const [jurnalUmum, setJurnalUmum] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getBukuBesars();
     getJurnalUmum();
     getUserById();
   }, []);
@@ -33,19 +33,14 @@ const TampilAJurnalUmum = () => {
         `${tempUrl}/aJurnalUmums/${idAJurnalUmum}`
       );
       setNoJurnalUmum(response.data.noJurnalUmum);
+      setTanggal(response.data.tanggal);
+      setNamaAccount(response.data.namaAccount);
       setKodeAccount(response.data.kodeAccount);
       setKeterangan(response.data.keterangan);
       setDebet(response.data.debet);
       setKredit(response.data.kredit);
       setLoading(false);
     }
-  };
-
-  const getBukuBesars = async () => {
-    setLoading(true);
-    const response = await axios.get(`${tempUrl}/bukuBesarKodeNamaKelompok`);
-    setBukuBesars(response.data);
-    setLoading(false);
   };
 
   const getJurnalUmum = async () => {
@@ -67,6 +62,8 @@ const TampilAJurnalUmum = () => {
       });
       await axios.delete(`${tempUrl}/aJurnalUmums/${idAJurnalUmum}`);
       setNoJurnalUmum("");
+      setTanggal("");
+      setNamaAccount("");
       setKodeAccount("");
       setKeterangan("");
       setDebet(0);
@@ -140,9 +137,24 @@ const TampilAJurnalUmum = () => {
               InputProps={{
                 readOnly: true
               }}
-              value={`${kodeAccount} - ${bukuBesars
-                .filter((val) => val.kode === kodeAccount)
-                .map((sup) => ` ${sup.nama}`)}`}
+              value={`${kodeAccount} - ${namaAccount}`}
+            />
+          </Box>
+          <Box sx={{ marginTop: 2 }}>
+            <Typography sx={{ margin: 1, fontWeight: "500" }}>
+              Tanggal
+            </Typography>
+            <TextField
+              id="outlined-basic"
+              variant="filled"
+              sx={{
+                display: "flex",
+                width: screenSize >= 650 ? "30rem" : "100%"
+              }}
+              InputProps={{
+                readOnly: true
+              }}
+              value={tanggal}
             />
           </Box>
           <Box sx={{ marginTop: 2 }}>

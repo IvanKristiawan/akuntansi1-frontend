@@ -30,7 +30,7 @@ const TampilAJurnalUmum = () => {
     if (id) {
       setLoading(true);
       const response = await axios.get(
-        `${tempUrl}/aJurnalUmums/${idAJurnalUmum}`
+        `${tempUrl}/aJurnalUmum/${idAJurnalUmum}`
       );
       setNoJurnalUmum(response.data.noJurnalUmum);
       setTanggal(response.data.tanggal);

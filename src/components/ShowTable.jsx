@@ -267,7 +267,7 @@ export function ShowTableJurnalUmum({ id, currentPosts }) {
               }}
               onClick={() => {
                 navigate(
-                  `/daftarJurnalUmum/jurnalUmum/${id}/${aJurnalUmum._id}`
+                  `/daftarJurnalUmum/jurnalUmum/${id}/${aJurnalUmum.noJurnalUmum}/${aJurnalUmum._id}`
                 );
               }}
             >

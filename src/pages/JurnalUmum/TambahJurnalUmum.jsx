@@ -28,7 +28,7 @@ const TambahJurnalUmum = () => {
         tanggal
       });
       setLoading(false);
-      navigate("/jurnalUmum");
+      navigate("/daftarJurnalUmum");
     } catch (error) {
       console.log(error);
     }

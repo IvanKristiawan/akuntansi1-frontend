@@ -214,7 +214,9 @@ export function ShowTableDaftarJurnalUmum({ currentPosts, searchTerm }) {
                   cursor: "pointer"
                 }}
                 onClick={() => {
-                  navigate(`/daftarJurnalUmum/jurnalUmum/${user._id}`);
+                  navigate(
+                    `/daftarJurnalUmum/jurnalUmum/${user._id}/${user.noJurnalUmum}`
+                  );
                 }}
               >
                 <TableCell component="th" scope="row">
@@ -233,7 +235,7 @@ export function ShowTableDaftarJurnalUmum({ currentPosts, searchTerm }) {
   );
 }
 
-export function ShowTableJurnalUmum({ id, currentPosts, noJurnalUmum }) {
+export function ShowTableJurnalUmum({ id, currentPosts }) {
   const { screenSize } = useStateContext();
   let navigate = useNavigate();
   return (
@@ -255,41 +257,35 @@ export function ShowTableJurnalUmum({ id, currentPosts, noJurnalUmum }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {currentPosts
-            .filter((val) => {
-              if (val.noJurnalUmum === noJurnalUmum) {
-                return val;
-              }
-            })
-            .map((aJurnalUmum, index) => (
-              <TableRow
-                key={aJurnalUmum.noJurnalUmum}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  "&:hover": { bgcolor: "#eeeeee" },
-                  cursor: "pointer"
-                }}
-                onClick={() => {
-                  navigate(
-                    `/daftarJurnalUmum/jurnalUmum/${id}/${aJurnalUmum._id}`
-                  );
-                }}
-              >
-                <TableCell component="th" scope="row">
-                  {aJurnalUmum.tanggal}
-                </TableCell>
-                <TableCell>
-                  {aJurnalUmum.kodeAccount} - {aJurnalUmum.namaAccount}
-                </TableCell>
-                {screenSize >= 600 && (
-                  <>
-                    <TableCell>{aJurnalUmum.keterangan}</TableCell>
-                    <TableCell>{aJurnalUmum.debet.toLocaleString()}</TableCell>
-                    <TableCell>{aJurnalUmum.kredit.toLocaleString()}</TableCell>
-                  </>
-                )}
-              </TableRow>
-            ))}
+          {currentPosts.map((aJurnalUmum, index) => (
+            <TableRow
+              key={aJurnalUmum.noJurnalUmum}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                "&:hover": { bgcolor: "#eeeeee" },
+                cursor: "pointer"
+              }}
+              onClick={() => {
+                navigate(
+                  `/daftarJurnalUmum/jurnalUmum/${id}/${aJurnalUmum._id}`
+                );
+              }}
+            >
+              <TableCell component="th" scope="row">
+                {aJurnalUmum.tanggal}
+              </TableCell>
+              <TableCell>
+                {aJurnalUmum.kodeAccount} - {aJurnalUmum.namaAccount}
+              </TableCell>
+              {screenSize >= 600 && (
+                <>
+                  <TableCell>{aJurnalUmum.keterangan}</TableCell>
+                  <TableCell>{aJurnalUmum.debet.toLocaleString()}</TableCell>
+                  <TableCell>{aJurnalUmum.kredit.toLocaleString()}</TableCell>
+                </>
+              )}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

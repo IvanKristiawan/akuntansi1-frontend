@@ -61,13 +61,6 @@ const TambahAJurnalUmum = () => {
       // setLoading(true);
       let kodeAccount = account.split(" ", 1)[0];
       let namaAccount = account.split("-")[1];
-      // alert(jurnalUmums.noJurnalUmum);
-      // alert(tanggal);
-      // alert(kodeAccount);
-      // alert(namaAccount);
-      // alert(keterangan);
-      // alert(debet);
-      // alert(kredit);
       await axios.post(`${tempUrl}/aJurnalUmums`, {
         noJurnalUmum: jurnalUmums.noJurnalUmum,
         tanggal,
@@ -83,7 +76,9 @@ const TambahAJurnalUmum = () => {
         balance: jurnalUmums.balance + (debet - kredit)
       });
       setLoading(false);
-      navigate(`/daftarJurnalUmum/jurnalUmum/${id}`);
+      navigate(
+        `/daftarJurnalUmum/jurnalUmum/${id}/${jurnalUmums.noJurnalUmum}`
+      );
     } catch (error) {
       console.log(error);
     }

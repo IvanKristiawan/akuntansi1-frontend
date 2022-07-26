@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -17,10 +17,12 @@ import { useStateContext } from "../../contexts/ContextProvider";
 import DownloadIcon from "@mui/icons-material/Download";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import * as XLSX from "xlsx";
 
 const TampilJurnalUmum = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[3];
+  const { noJU } = useParams();
   const { screenSize } = useStateContext();
   const [noJurnalUmum, setNoJurnalUmum] = useState("");
   const [tanggal, setTanggal] = useState("");
@@ -29,7 +31,6 @@ const TampilJurnalUmum = () => {
   const [balance, setBalance] = useState("");
   const [aJurnalUmums, setAJurnalUmums] = useState([]);
   const [aJurnalUmumForDoc, setAJurnalUmumForDoc] = useState([]);
-  const [aJurnalUmumForDocDisplay, setAJurnalUmumForDocDisplay] = useState([]);
   const navigate = useNavigate();
 
   const columns = [
@@ -60,30 +61,21 @@ const TampilJurnalUmum = () => {
 
   useEffect(() => {
     getAJurnalUmums();
-    getAJurnalUmumForDoc();
     id && getUserById();
+    getAJurnalUmumForDoc();
   }, [id]);
 
   const getAJurnalUmums = async () => {
     setLoading(true);
-    const response = await axios.get(`${tempUrl}/aJurnalUmums`);
+    const response = await axios.get(`${tempUrl}/aJurnalUmums/${noJU}`);
     setAJurnalUmums(response.data);
     setLoading(false);
   };
 
   const getAJurnalUmumForDoc = async () => {
     setLoading(true);
-    let tempDebet;
-    let tempKredit;
-    const response = await axios.get(`${tempUrl}/aJurnalUmumForDoc`);
+    const response = await axios.get(`${tempUrl}/aJurnalUmumByNota/${noJU}`);
     setAJurnalUmumForDoc(response.data);
-    for (let i = 0; i < aJurnalUmumForDoc.length; i++) {
-      tempDebet = aJurnalUmumForDoc[i].debet.toLocaleString();
-      tempKredit = aJurnalUmumForDoc[i].kredit.toLocaleString();
-      aJurnalUmumForDoc[i].debet = tempDebet;
-      aJurnalUmumForDoc[i].kredit = tempKredit;
-    }
-    setAJurnalUmumForDocDisplay(aJurnalUmumForDoc);
     setLoading(false);
   };
 
@@ -104,16 +96,9 @@ const TampilJurnalUmum = () => {
     try {
       setLoading(true);
       for (let aJurnalUmum of aJurnalUmums) {
-        if (aJurnalUmum.noJurnalUmum === noJurnalUmum) {
-          let newTotalDebet = totalDebet - aJurnalUmum.totalDebet;
-          let newTotalKredit = totalKredit - aJurnalUmum.totalKredit;
-          await axios.patch(`${tempUrl}/jurnalUmums/${aJurnalUmum._id}`, {
-            totalDebet: newTotalDebet,
-            totalKredit: newTotalKredit
-          });
-        }
+        await axios.delete(`${tempUrl}/aJurnalUmums/${aJurnalUmum._id}`);
       }
-      await axios.delete(`${tempUrl}/aJurnalUmums/${id}`);
+      await axios.delete(`${tempUrl}/jurnalUmums/${id}`);
       setLoading(false);
       navigate("/daftarJurnalUmum");
     } catch (error) {
@@ -136,9 +121,21 @@ const TampilJurnalUmum = () => {
     doc.autoTable({
       margin: { top: 60 },
       columns: columns.map((col) => ({ ...col, dataKey: col.field })),
-      body: aJurnalUmumForDocDisplay
+      body: aJurnalUmumForDoc
     });
     doc.save(`jurnalUmum-${noJurnalUmum}.pdf`);
+  };
+
+  const downloadExcel = () => {
+    const workSheet = XLSX.utils.json_to_sheet(aJurnalUmumForDoc);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, `Jurnal Umum`);
+    // Buffer
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+    // Binary String
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+    // Download
+    XLSX.writeFile(workBook, `JurnalUmum-${noJurnalUmum}.xlsx`);
   };
 
   if (loading) {
@@ -179,7 +176,7 @@ const TampilJurnalUmum = () => {
           <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
             PDF
           </Button>
-          <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
+          <Button startIcon={<DownloadIcon />} onClick={() => downloadExcel()}>
             EXCEL
           </Button>
         </ButtonGroup>
@@ -242,11 +239,7 @@ const TampilJurnalUmum = () => {
       </Box>
       <Divider sx={{ pt: 4 }} />
       <Box sx={{ pt: 4, display: "flex", justifyContent: "center" }}>
-        <ShowTableJurnalUmum
-          id={id}
-          currentPosts={currentPosts}
-          noJurnalUmum={noJurnalUmum}
-        />
+        <ShowTableJurnalUmum id={id} currentPosts={currentPosts} />
       </Box>
       <Box
         sx={{

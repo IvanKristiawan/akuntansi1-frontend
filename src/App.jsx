@@ -73,7 +73,7 @@ export default function App() {
                 element={<TambahJurnalUmum />}
               />
               <Route
-                path="/daftarJurnalUmum/jurnalUmum/:id"
+                path="/daftarJurnalUmum/jurnalUmum/:id/:noJU"
                 element={<TampilJurnalUmum />}
               />
               <Route

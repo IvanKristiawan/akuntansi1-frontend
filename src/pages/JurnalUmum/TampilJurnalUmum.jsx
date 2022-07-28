@@ -97,6 +97,9 @@ const TampilJurnalUmum = () => {
       setLoading(true);
       for (let aJurnalUmum of aJurnalUmums) {
         await axios.delete(`${tempUrl}/aJurnalUmums/${aJurnalUmum._id}`);
+        await axios.delete(
+          `${tempUrl}/laporanBukuBesars/${aJurnalUmum.idLaporanBukuBesar}`
+        );
       }
       await axios.delete(`${tempUrl}/jurnalUmums/${id}`);
       setLoading(false);
@@ -112,7 +115,7 @@ const TampilJurnalUmum = () => {
     doc.text(`PT INDUSTRI CONTOH`, 15, 10);
     doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
     doc.setFontSize(16);
-    doc.text(`BUKTI JURNAL`, 80, 30);
+    doc.text(`BUKTI JURNAL`, 90, 30);
     doc.setFontSize(12);
     doc.text(`No.Bukti : ${noJurnalUmum}`, 15, 40);
     doc.text(`Tanggal : ${tanggal}`, 15, 45);
@@ -143,7 +146,7 @@ const TampilJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Jurnal Umum
@@ -293,15 +296,6 @@ const TampilJurnalUmum = () => {
             value={balance.toLocaleString()}
           />
         </Box>
-      </Box>
-      <Box sx={{ pt: 4, display: "flex", justifyContent: "center" }}>
-        <Pagination
-          count={count}
-          page={page}
-          onChange={handleChange}
-          color="primary"
-          size={screenSize <= 600 ? "small" : "large"}
-        />
       </Box>
     </Box>
   );

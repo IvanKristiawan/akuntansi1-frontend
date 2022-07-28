@@ -16,7 +16,8 @@ import {
   TampilJurnalUmum,
   UbahJurnalUmum,
   TambahAJurnalUmum,
-  TampilAJurnalUmum
+  TampilAJurnalUmum,
+  LaporanBukuBesar
 } from "./pages";
 
 export default function App() {
@@ -33,10 +34,10 @@ export default function App() {
   }, []);
   return (
     <div className="App">
-      <Box sx={{ backgroundColor: "#eeeeee" }}>
+      <Box sx={{ backgroundColor: "#e0e0e0" }}>
         <BrowserRouter>
           <Header />
-          <Paper sx={{ margin: 1, padding: 2 }}>
+          <Paper sx={{ margin: 1, padding: 2, backgroundColor: "#fafafa" }}>
             <Routes>
               {/* <Route path="/dashboard" element={<KelompokBukuBesar />} /> */}
               {/* <Route path="/tambahTransaksi" element={<KelompokBukuBesar />} /> */}
@@ -89,6 +90,8 @@ export default function App() {
                 path="/daftarJurnalUmum/jurnalUmum/:id/:noJU/:idAJurnalUmum"
                 element={<TampilAJurnalUmum />}
               />
+              {/* Laporan Buku Besar */}
+              <Route path="/bukuBesarGL" element={<LaporanBukuBesar />} />
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>

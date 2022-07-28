@@ -54,7 +54,7 @@ const UbahJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Ubah Daftar Jurnal Umum

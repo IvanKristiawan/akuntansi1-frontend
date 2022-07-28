@@ -58,11 +58,23 @@ const TambahAJurnalUmum = () => {
 
   const saveUser = async (e) => {
     try {
-      // setLoading(true);
+      setLoading(true);
       let kodeAccount = account.split(" ", 1)[0];
       let namaAccount = account.split("-")[1];
+      let tempLaporanBukuBesar = await axios.post(
+        `${tempUrl}/laporanBukuBesars`,
+        {
+          kodeBukuBesar: kodeAccount,
+          tanggal,
+          noJurnalUmum: jurnalUmums.noJurnalUmum,
+          keterangan,
+          debet,
+          kredit
+        }
+      );
       await axios.post(`${tempUrl}/aJurnalUmums`, {
         noJurnalUmum: jurnalUmums.noJurnalUmum,
+        idLaporanBukuBesar: tempLaporanBukuBesar.data,
         tanggal,
         kodeAccount,
         namaAccount,
@@ -89,7 +101,7 @@ const TambahAJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 5 }}>
       <Typography color="#757575">Jurnal Umum</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Entry Jurnal Buku Besar

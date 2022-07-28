@@ -40,6 +40,7 @@ const BukuBesar = () => {
       val.kode.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.nama.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.kelompok.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.jenisSaldo.toUpperCase().includes(searchTerm.toUpperCase()) ||
       val.jenis.toUpperCase().includes(searchTerm.toUpperCase())
     ) {
       return val;

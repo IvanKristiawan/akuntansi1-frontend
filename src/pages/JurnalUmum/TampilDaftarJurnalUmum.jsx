@@ -28,9 +28,8 @@ const TampilDaftarJurnalUmum = () => {
     if (searchTerm === "") {
       return val;
     } else if (
-      val.nomorNota.includes(searchTerm) ||
-      val.jenis.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.updatedAt.toUpperCase().includes(searchTerm.toUpperCase())
+      val.noJurnalUmum.includes(searchTerm) ||
+      val.tanggal.toUpperCase().includes(searchTerm.toUpperCase())
     ) {
       return val;
     }
@@ -61,7 +60,7 @@ const TampilDaftarJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Daftar Jurnal Umum

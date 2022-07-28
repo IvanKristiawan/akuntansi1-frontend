@@ -11,6 +11,7 @@ const TampilAJurnalUmum = () => {
   const { id, idAJurnalUmum } = useParams();
   const navigate = useNavigate();
   const { screenSize } = useStateContext();
+  const [idLaporanBukuBesar, setIdLaporanBukuBesar] = useState("");
   const [noJurnalUmum, setNoJurnalUmum] = useState("");
   const [kodeAccount, setKodeAccount] = useState("");
   const [namaAccount, setNamaAccount] = useState("");
@@ -32,6 +33,7 @@ const TampilAJurnalUmum = () => {
       const response = await axios.get(
         `${tempUrl}/aJurnalUmum/${idAJurnalUmum}`
       );
+      setIdLaporanBukuBesar(response.data.idLaporanBukuBesar);
       setNoJurnalUmum(response.data.noJurnalUmum);
       setTanggal(response.data.tanggal);
       setNamaAccount(response.data.namaAccount);
@@ -61,6 +63,7 @@ const TampilAJurnalUmum = () => {
         balance: jurnalUmum.balance - (debet - kredit)
       });
       await axios.delete(`${tempUrl}/aJurnalUmums/${idAJurnalUmum}`);
+      await axios.delete(`${tempUrl}/laporanBukuBesars/${idLaporanBukuBesar}`);
       setNoJurnalUmum("");
       setTanggal("");
       setNamaAccount("");
@@ -69,7 +72,7 @@ const TampilAJurnalUmum = () => {
       setDebet(0);
       setKredit(0);
       setLoading(false);
-      navigate(`/daftarJurnalUmum/jurnalUmum/${id}`);
+      navigate(`/daftarJurnalUmum/jurnalUmum/${id}/${noJurnalUmum}`);
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +83,7 @@ const TampilAJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ pt: 5 }}>
       <Typography color="#757575">Jurnal Umum</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Entry Jurnal Buku Besar
@@ -188,7 +191,7 @@ const TampilAJurnalUmum = () => {
               InputProps={{
                 readOnly: true
               }}
-              value={debet}
+              value={debet.toLocaleString()}
             />
           </Box>
           <Box sx={{ marginTop: 2 }}>
@@ -205,7 +208,7 @@ const TampilAJurnalUmum = () => {
               InputProps={{
                 readOnly: true
               }}
-              value={kredit}
+              value={kredit.toLocaleString()}
             />
           </Box>
         </Box>

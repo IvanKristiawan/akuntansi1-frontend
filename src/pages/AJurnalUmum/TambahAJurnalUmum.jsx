@@ -59,8 +59,53 @@ const TambahAJurnalUmum = () => {
   const saveUser = async (e) => {
     try {
       setLoading(true);
+      let tempJenisAccount;
+      let tempIdNeracaSaldo;
       let kodeAccount = account.split(" ", 1)[0];
       let namaAccount = account.split("-")[1];
+      // Get Neraca Saldo Last
+      let tempNeracaSaldo = await axios.get(
+        `${tempUrl}/neracaSaldoLast/${kodeAccount}`
+      );
+      if (tempNeracaSaldo.data[0]) {
+        if (tempNeracaSaldo.data[0].jenisAccount === "DEBET") {
+          // Patch Neraca Saldo
+          tempIdNeracaSaldo = await axios.patch(
+            `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data[0]._id}`,
+            {
+              debet:
+                tempNeracaSaldo.data[0].debet +
+                (parseInt(debet) - parseInt(kredit))
+            }
+          );
+        } else {
+          // Patch Neraca Saldo
+          tempIdNeracaSaldo = await axios.patch(
+            `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data[0]._id}`,
+            {
+              kredit:
+                tempNeracaSaldo.data[0].kredit +
+                (parseInt(kredit) - parseInt(debet))
+            }
+          );
+        }
+      } else {
+        bukuBesars.filter((val, index) => {
+          if (val.kode === kodeAccount) {
+            tempJenisAccount = val.jenisSaldo;
+          }
+        });
+        // Post Neraca Saldo
+        tempIdNeracaSaldo = await axios.post(`${tempUrl}/neracaSaldos`, {
+          tanggal,
+          jenisAccount: tempJenisAccount,
+          kodeAccount,
+          namaAccount,
+          debet,
+          kredit
+        });
+      }
+      // Post Laporan Buku Besar
       let tempLaporanBukuBesar = await axios.post(
         `${tempUrl}/laporanBukuBesars`,
         {
@@ -72,8 +117,10 @@ const TambahAJurnalUmum = () => {
           kredit
         }
       );
+      // Post A Jurnal Umum
       await axios.post(`${tempUrl}/aJurnalUmums`, {
         noJurnalUmum: jurnalUmums.noJurnalUmum,
+        idNeracaSaldo: tempIdNeracaSaldo.data,
         idLaporanBukuBesar: tempLaporanBukuBesar.data,
         tanggal,
         kodeAccount,
@@ -82,6 +129,7 @@ const TambahAJurnalUmum = () => {
         debet,
         kredit
       });
+      // Patch Jurnal Umum
       await axios.patch(`${tempUrl}/jurnalUmums/${id}`, {
         totalDebet: jurnalUmums.totalDebet + parseInt(debet),
         totalKredit: jurnalUmums.totalKredit + parseInt(kredit),

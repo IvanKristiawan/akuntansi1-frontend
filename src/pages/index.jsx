@@ -17,3 +17,5 @@ export { default as TambahAJurnalUmum } from "./AJurnalUmum/TambahAJurnalUmum";
 export { default as TampilAJurnalUmum } from "./AJurnalUmum/TampilAJurnalUmum";
 // Laporan Buku Besar
 export { default as LaporanBukuBesar } from "./LaporanBukuBesar/LaporanBukuBesar";
+// Neraca Saldo
+export { default as NeracaSaldo } from "./NeracaSaldo/NeracaSaldo";

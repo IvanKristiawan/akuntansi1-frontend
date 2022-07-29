@@ -100,6 +100,9 @@ const TampilJurnalUmum = () => {
         await axios.delete(
           `${tempUrl}/laporanBukuBesars/${aJurnalUmum.idLaporanBukuBesar}`
         );
+        await axios.delete(
+          `${tempUrl}/neracaSaldos/${aJurnalUmum.idNeracaSaldo}`
+        );
       }
       await axios.delete(`${tempUrl}/jurnalUmums/${id}`);
       setLoading(false);

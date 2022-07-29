@@ -17,7 +17,8 @@ import {
   UbahJurnalUmum,
   TambahAJurnalUmum,
   TampilAJurnalUmum,
-  LaporanBukuBesar
+  LaporanBukuBesar,
+  NeracaSaldo
 } from "./pages";
 
 export default function App() {
@@ -92,6 +93,8 @@ export default function App() {
               />
               {/* Laporan Buku Besar */}
               <Route path="/bukuBesarGL" element={<LaporanBukuBesar />} />
+              {/* Neraca Saldo */}
+              <Route path="/neracaSaldo" element={<NeracaSaldo />} />
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>

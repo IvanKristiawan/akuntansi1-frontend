@@ -11,6 +11,7 @@ const TampilAJurnalUmum = () => {
   const { id, idAJurnalUmum } = useParams();
   const navigate = useNavigate();
   const { screenSize } = useStateContext();
+  const [idNeracaSaldo, setIdNeracaSaldo] = useState("");
   const [idLaporanBukuBesar, setIdLaporanBukuBesar] = useState("");
   const [noJurnalUmum, setNoJurnalUmum] = useState("");
   const [kodeAccount, setKodeAccount] = useState("");
@@ -33,6 +34,7 @@ const TampilAJurnalUmum = () => {
       const response = await axios.get(
         `${tempUrl}/aJurnalUmum/${idAJurnalUmum}`
       );
+      setIdNeracaSaldo(response.data.idNeracaSaldo);
       setIdLaporanBukuBesar(response.data.idLaporanBukuBesar);
       setNoJurnalUmum(response.data.noJurnalUmum);
       setTanggal(response.data.tanggal);
@@ -55,14 +57,44 @@ const TampilAJurnalUmum = () => {
   const deleteUser = async (id) => {
     try {
       setLoading(true);
+      let tempIdNeracaSaldo;
       const newDebet = parseInt(jurnalUmum.totalDebet) - parseInt(debet);
       const newKredit = parseInt(jurnalUmum.totalKredit) - parseInt(kredit);
+      // Patch Jurnal Umum
       await axios.patch(`${tempUrl}/jurnalUmums/${jurnalUmum._id}`, {
         totalDebet: newDebet,
         totalKredit: newKredit,
         balance: jurnalUmum.balance - (debet - kredit)
       });
+      let tempNeracaSaldo = await axios.get(
+        `${tempUrl}/neracaSaldos/${idNeracaSaldo}`
+      );
+      if (tempNeracaSaldo.data) {
+        if (tempNeracaSaldo.data.jenisAccount === "DEBET") {
+          // Patch Neraca Saldo
+          tempIdNeracaSaldo = await axios.patch(
+            `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data._id}`,
+            {
+              debet:
+                tempNeracaSaldo.data.debet -
+                (parseInt(debet) - parseInt(kredit))
+            }
+          );
+        } else {
+          // Patch Neraca Saldo
+          tempIdNeracaSaldo = await axios.patch(
+            `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data._id}`,
+            {
+              kredit:
+                tempNeracaSaldo.data.kredit -
+                (parseInt(kredit) - parseInt(debet))
+            }
+          );
+        }
+      }
+      // Delete A Jurnal Umum
       await axios.delete(`${tempUrl}/aJurnalUmums/${idAJurnalUmum}`);
+      // Delete Laporan Buku Besar
       await axios.delete(`${tempUrl}/laporanBukuBesars/${idLaporanBukuBesar}`);
       setNoJurnalUmum("");
       setTanggal("");

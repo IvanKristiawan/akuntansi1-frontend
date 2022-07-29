@@ -555,3 +555,90 @@ export function ShowLaporanBukuBesar({
     </Card>
   );
 }
+
+export function ShowNeracaSaldo({ currentPosts, kodeBukuBesar }) {
+  const { screenSize } = useStateContext();
+  return screenSize >= 600 ? (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold" }}>Kode Account</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Nama Account</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Debet</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Kredit</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (kodeBukuBesar === val.kodeAccount) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user._id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: "#eeeeee" },
+                  cursor: "pointer"
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.kodeAccount}
+                </TableCell>
+                <TableCell>{user.namaAccount}</TableCell>
+                {screenSize >= 600 && (
+                  <>
+                    <TableCell>{user.debet.toLocaleString()}</TableCell>
+                    <TableCell>{user.kredit.toLocaleString()}</TableCell>
+                  </>
+                )}
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  ) : (
+    <Card elevation={3} sx={{ width: "100%", backgroundColor: "#f5f5f5" }}>
+      <CardActionArea>
+        {currentPosts
+          .filter((val) => {
+            if (kodeBukuBesar === val.kodeAccount) {
+              return val;
+            }
+          })
+          .map((user, index, row) => (
+            <>
+              <CardContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: 1
+                  }}
+                >
+                  <Typography variant="body2" component="div">
+                    {user.kodeAccount}
+                  </Typography>
+                  <Typography variant="body2" component="div">
+                    {user.namaAccount}
+                  </Typography>
+                </Box>
+                <Paper elevation={3} sx={{ p: 1 }}>
+                  <Typography variant="body2">
+                    Debet : {user.debet.toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2">
+                    Kredit : {user.kredit.toLocaleString()}
+                  </Typography>
+                </Paper>
+                {index + 1 !== row.length && <Divider sx={{ pb: 3, mb: -2 }} />}
+              </CardContent>
+            </>
+          ))}
+      </CardActionArea>
+    </Card>
+  );
+}

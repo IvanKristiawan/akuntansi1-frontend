@@ -61,12 +61,29 @@ const TambahAJurnalUmum = () => {
       setLoading(true);
       let tempJenisAccount;
       let tempIdNeracaSaldo;
+      let tempLabaRugiTransaksi;
+      let tempLabaRugiTransaksiOther;
       let kodeAccount = account.split(" ", 1)[0];
       let namaAccount = account.split("-")[1];
       // Get Neraca Saldo Last
       let tempNeracaSaldo = await axios.get(
         `${tempUrl}/neracaSaldoLast/${kodeAccount}`
       );
+      // Patch Laba Rugi
+      let tempLabaRugi = await axios.get(`${tempUrl}/labaRugiLast`);
+      if (tempNeracaSaldo.data[0]) {
+        tempLabaRugiTransaksi = await axios.get(
+          `${tempUrl}/labaRugiTransaksi/${tempNeracaSaldo.data[0].kodeAccount}`
+        );
+        tempLabaRugiTransaksiOther = await axios.get(
+          `${tempUrl}/labaRugiTransaksiOther/${tempNeracaSaldo.data[0].kodeAccount}`
+        );
+      } else {
+        tempLabaRugiTransaksi = await axios.get(
+          `${tempUrl}/labaRugiTransaksiAll`
+        );
+      }
+      alert("HIt here");
       if (tempNeracaSaldo.data[0]) {
         if (tempNeracaSaldo.data[0].jenisAccount === "DEBET") {
           // Patch Neraca Saldo
@@ -78,7 +95,62 @@ const TambahAJurnalUmum = () => {
                 (parseInt(debet) - parseInt(kredit))
             }
           );
+          // Patch Laba Rugi
+          if (kodeAccount.slice(0, 3) === "304") {
+            // HPP
+            tempLabaRugiTransaksiOther.data.push({
+              idNeracaSaldo: tempIdNeracaSaldo.data._id,
+              kodeAccount,
+              namaAccount,
+              kelompokAccount: kodeAccount.slice(0, 3),
+              total:
+                tempLabaRugiTransaksi.data[0].total +
+                (parseInt(debet) - parseInt(kredit))
+            });
+            await axios.patch(
+              `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+              {
+                tanggal: tempLabaRugi.data[0].tanggal,
+                transaksi: tempLabaRugiTransaksiOther.data,
+                totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+                totalHPP: tempLabaRugi.data[0].totalHPP + parseInt(debet),
+                totalBebanOperasional:
+                  tempLabaRugi.data[0].totalBebanOperasional,
+                labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(debet),
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+              }
+            );
+          } else {
+            // Biaya
+            alert("Masuk Biaya");
+            tempLabaRugiTransaksiOther.data.push({
+              idNeracaSaldo: tempIdNeracaSaldo.data._id,
+              kodeAccount,
+              namaAccount,
+              kelompokAccount: kodeAccount.slice(0, 3),
+              total:
+                tempLabaRugiTransaksi.data[0].total +
+                (parseInt(debet) - parseInt(kredit))
+            });
+            alert(tempLabaRugiTransaksiOther);
+            alert(tempLabaRugiTransaksiOther.data);
+            alert(tempLabaRugiTransaksiOther.data[0]);
+            await axios.patch(
+              `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+              {
+                tanggal: tempLabaRugi.data[0].tanggal,
+                transaksi: tempLabaRugiTransaksiOther.data,
+                totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+                totalHPP: tempLabaRugi.data[0].totalHPP,
+                totalBebanOperasional:
+                  tempLabaRugi.data[0].totalBebanOperasional + parseInt(debet),
+                labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(debet),
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+              }
+            );
+          }
         } else {
+          // Kredit Pendapatan
           // Patch Neraca Saldo
           tempIdNeracaSaldo = await axios.patch(
             `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data[0]._id}`,
@@ -88,14 +160,39 @@ const TambahAJurnalUmum = () => {
                 (parseInt(kredit) - parseInt(debet))
             }
           );
+          // Patch Laba Rugi
+          tempLabaRugiTransaksiOther.data.push({
+            idNeracaSaldo: tempIdNeracaSaldo.data._id,
+            kodeAccount,
+            namaAccount,
+            kelompokAccount: kodeAccount.slice(0, 3),
+            total:
+              tempLabaRugiTransaksi.data[0].total +
+              (parseInt(kredit) - parseInt(debet))
+          });
+          await axios.patch(
+            `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+            {
+              tanggal: tempLabaRugi.data[0].tanggal,
+              transaksi: tempLabaRugiTransaksiOther.data,
+              totalPendapatan:
+                tempLabaRugi.data[0].totalPendapatan + parseInt(kredit),
+              totalHPP: tempLabaRugi.data[0].totalHPP,
+              totalBebanOperasional: tempLabaRugi.data[0].totalBebanOperasional,
+              labaKotor: tempLabaRugi.data[0].labaKotor + parseInt(kredit),
+              labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
+            }
+          );
         }
       } else {
+        alert("Hit before 2");
         bukuBesars.filter((val, index) => {
           if (val.kode === kodeAccount) {
             tempJenisAccount = val.jenisSaldo;
           }
         });
         // Post Neraca Saldo
+        alert("Hit before 1");
         tempIdNeracaSaldo = await axios.post(`${tempUrl}/neracaSaldos`, {
           tanggal,
           jenisAccount: tempJenisAccount,
@@ -104,7 +201,82 @@ const TambahAJurnalUmum = () => {
           debet,
           kredit
         });
+        // Patch Laba Rugi
+        alert("Hit 1");
+        if (kodeAccount.slice(0, 3) === "301") {
+          // KREDIT PENJUALAN
+          alert("Hit kredit penjualan");
+          await axios.patch(
+            `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+            {
+              tanggal: tempLabaRugi.data[0].tanggal,
+              transaksi: [
+                {
+                  idNeracaSaldo: tempIdNeracaSaldo.data._id,
+                  kodeAccount,
+                  namaAccount,
+                  kelompokAccount: kodeAccount.slice(0, 3),
+                  total: parseInt(kredit) - parseInt(debet)
+                },
+                tempLabaRugiTransaksi.data[0],
+                tempLabaRugiTransaksiOther.data[0]
+              ],
+              totalPendapatan:
+                tempLabaRugi.data[0].totalPendapatan + parseInt(kredit),
+              totalHPP: tempLabaRugi.data[0].totalHPP,
+              totalBebanOperasional: tempLabaRugi.data[0].totalBebanOperasional,
+              labaKotor: tempLabaRugi.data[0].labaKotor + parseInt(kredit),
+              labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
+            }
+          );
+        } else if (kodeAccount.slice(0, 3) === "304") {
+          // DEBET HPP
+          alert("Hit debet hpp");
+          tempLabaRugiTransaksi.data.push({
+            idNeracaSaldo: tempIdNeracaSaldo.data._id,
+            kodeAccount,
+            namaAccount,
+            kelompokAccount: kodeAccount.slice(0, 3),
+            total: parseInt(debet) - parseInt(kredit)
+          });
+          await axios.patch(
+            `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+            {
+              tanggal: tempLabaRugi.data[0].tanggal,
+              transaksi: tempLabaRugiTransaksi.data,
+              totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+              totalHPP: tempLabaRugi.data[0].totalHPP + parseInt(debet),
+              totalBebanOperasional: tempLabaRugi.data[0].totalBebanOperasional,
+              labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(debet),
+              labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+            }
+          );
+        } else {
+          // DEBET BIAYA
+          alert("Hit debet biaya");
+          tempLabaRugiTransaksi.data.push({
+            idNeracaSaldo: tempIdNeracaSaldo.data._id,
+            kodeAccount,
+            namaAccount,
+            kelompokAccount: kodeAccount.slice(0, 3),
+            total: parseInt(debet) - parseInt(kredit)
+          });
+          await axios.patch(
+            `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+            {
+              tanggal: tempLabaRugi.data[0].tanggal,
+              transaksi: tempLabaRugiTransaksi.data,
+              totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+              totalHPP: tempLabaRugi.data[0].totalHPP,
+              totalBebanOperasional:
+                tempLabaRugi.data[0].totalBebanOperasional + parseInt(debet),
+              labaKotor: tempLabaRugi.data[0].labaKotor,
+              labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+            }
+          );
+        }
       }
+      alert("Hit 3");
       // Post Laporan Buku Besar
       let tempLaporanBukuBesar = await axios.post(
         `${tempUrl}/laporanBukuBesars`,
@@ -240,7 +412,7 @@ const TambahAJurnalUmum = () => {
             </Box>
             <Box sx={{ marginTop: 2 }}>
               <Typography sx={{ margin: 1, fontWeight: "500" }}>
-                Debet Rp.
+                Debet {debet !== 0 && ` : Rp ${debet.toLocaleString()}`}
               </Typography>
               <TextField
                 id="outlined-basic"
@@ -250,12 +422,14 @@ const TambahAJurnalUmum = () => {
                   display: "flex",
                   width: screenSize >= 650 ? "30rem" : "100%"
                 }}
-                onChange={(e) => setDebet(e.target.value)}
+                onChange={(e) => {
+                  setDebet(parseInt(e.target.value));
+                }}
               />
             </Box>
             <Box sx={{ marginTop: 2 }}>
               <Typography sx={{ margin: 1, fontWeight: "500" }}>
-                Kredit Rp.
+                Kredit {kredit !== 0 && ` : Rp ${kredit.toLocaleString()}`}
               </Typography>
               <TextField
                 id="outlined-basic"
@@ -265,7 +439,7 @@ const TambahAJurnalUmum = () => {
                   display: "flex",
                   width: screenSize >= 650 ? "30rem" : "100%"
                 }}
-                onChange={(e) => setKredit(e.target.value)}
+                onChange={(e) => setKredit(parseInt(e.target.value))}
               />
             </Box>
           </Box>

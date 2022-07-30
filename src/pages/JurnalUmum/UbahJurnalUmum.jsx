@@ -93,6 +93,9 @@ const UbahJurnalUmum = () => {
                 width: screenSize >= 650 ? "30rem" : "100%"
               }}
               onChange={(e) => setNoJurnalUmum(e.target.value)}
+              InputProps={{
+                readOnly: true
+              }}
             />
           </Box>
           <Box sx={{ marginTop: 2 }}>

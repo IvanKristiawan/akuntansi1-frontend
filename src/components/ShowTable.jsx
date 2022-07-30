@@ -467,6 +467,13 @@ export function ShowLaporanBukuBesar({
   return screenSize >= 600 ? (
     <TableContainer component={Paper} sx={{ width: "100%" }}>
       <Table aria-label="simple table">
+        <colgroup>
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+        </colgroup>
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: "bold" }}>Tanggal</TableCell>
@@ -561,6 +568,12 @@ export function ShowNeracaSaldo({ currentPosts, kodeBukuBesar }) {
   return screenSize >= 600 ? (
     <TableContainer component={Paper} sx={{ width: "100%" }}>
       <Table aria-label="simple table">
+        <colgroup>
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+        </colgroup>
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: "bold" }}>Kode Account</TableCell>
@@ -641,4 +654,30 @@ export function ShowNeracaSaldo({ currentPosts, kodeBukuBesar }) {
       </CardActionArea>
     </Card>
   );
+}
+
+export function ShowLabaRugi({ currentPosts, kelompokAccount }) {
+  return currentPosts
+    .filter((val) => {
+      if (kelompokAccount === val.kelompokAccount) {
+        return val;
+      }
+    })
+    .map((user, index) => (
+      <>
+        <TableRow
+          sx={{
+            "&:last-child td, &:last-child th": { border: 0 },
+            "&:hover": { bgcolor: "#eeeeee" },
+            cursor: "pointer"
+          }}
+        >
+          <TableCell component="th" scope="row">
+            {user.kodeAccount}
+          </TableCell>
+          <TableCell>{user.namaAccount}</TableCell>
+          <TableCell>Rp {user.total.toLocaleString()}</TableCell>
+        </TableRow>
+      </>
+    ));
 }

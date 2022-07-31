@@ -59,7 +59,7 @@ const NeracaSaldo = () => {
   const downloadExcel = () => {
     const workSheet = XLSX.utils.json_to_sheet(neracaSaldoForDoc);
     const workBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, workSheet, `Jurnal Umum`);
+    XLSX.utils.book_append_sheet(workBook, workSheet, `Neraca Saldo`);
     // Buffer
     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
     // Binary String

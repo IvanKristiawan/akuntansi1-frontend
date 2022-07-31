@@ -57,7 +57,10 @@ const TampilAJurnalUmum = () => {
   const deleteUser = async (id) => {
     try {
       setLoading(true);
+      let tempJenisAccount;
       let tempIdNeracaSaldo;
+      let tempLabaRugiTransaksi;
+      let tempLabaRugiTransaksiOther;
       const newDebet = parseInt(jurnalUmum.totalDebet) - parseInt(debet);
       const newKredit = parseInt(jurnalUmum.totalKredit) - parseInt(kredit);
       // Patch Jurnal Umum
@@ -66,9 +69,20 @@ const TampilAJurnalUmum = () => {
         totalKredit: newKredit,
         balance: jurnalUmum.balance - (debet - kredit)
       });
+      // Get Neraca Saldo
       let tempNeracaSaldo = await axios.get(
         `${tempUrl}/neracaSaldos/${idNeracaSaldo}`
       );
+      // Patch Laba Rugi
+      let tempLabaRugi = await axios.get(`${tempUrl}/labaRugiLast`);
+      alert("There's Neraca Saldo");
+      tempLabaRugiTransaksi = await axios.get(
+        `${tempUrl}/labaRugiTransaksi/${tempNeracaSaldo.data.kodeAccount}`
+      );
+      tempLabaRugiTransaksiOther = await axios.get(
+        `${tempUrl}/labaRugiTransaksiOther/${tempNeracaSaldo.data.kodeAccount}`
+      );
+      alert("HIt here");
       if (tempNeracaSaldo.data) {
         if (tempNeracaSaldo.data.jenisAccount === "DEBET") {
           // Patch Neraca Saldo
@@ -80,7 +94,64 @@ const TampilAJurnalUmum = () => {
                 (parseInt(debet) - parseInt(kredit))
             }
           );
+          // Patch Laba Rugi
+          if (kodeAccount.slice(0, 3) === "304") {
+            // HPP
+            alert("Hit hpp");
+            tempLabaRugiTransaksiOther.data.push({
+              idNeracaSaldo: tempIdNeracaSaldo.data._id,
+              kodeAccount,
+              namaAccount,
+              kelompokAccount: kodeAccount.slice(0, 3),
+              total:
+                tempLabaRugiTransaksi.data[0].total -
+                (parseInt(debet) - parseInt(kredit))
+            });
+            await axios.patch(
+              `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+              {
+                tanggal: tempLabaRugi.data[0].tanggal,
+                transaksi: tempLabaRugiTransaksiOther.data,
+                totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+                totalHPP: tempLabaRugi.data[0].totalHPP - parseInt(debet),
+                totalBebanOperasional:
+                  tempLabaRugi.data[0].totalBebanOperasional,
+                labaKotor: tempLabaRugi.data[0].labaKotor + parseInt(debet),
+                labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet)
+              }
+            );
+          } else if (kodeAccount.slice(0, 3) === "310") {
+            // Biaya
+            alert("Masuk Biaya");
+            tempLabaRugiTransaksiOther.data.push({
+              idNeracaSaldo: tempIdNeracaSaldo.data._id,
+              kodeAccount,
+              namaAccount,
+              kelompokAccount: kodeAccount.slice(0, 3),
+              total:
+                tempLabaRugiTransaksi.data[0].total -
+                (parseInt(debet) - parseInt(kredit))
+            });
+            alert(tempLabaRugiTransaksiOther);
+            alert(tempLabaRugiTransaksiOther.data);
+            alert(tempLabaRugiTransaksiOther.data[0]);
+            await axios.patch(
+              `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+              {
+                tanggal: tempLabaRugi.data[0].tanggal,
+                transaksi: tempLabaRugiTransaksiOther.data,
+                totalPendapatan: tempLabaRugi.data[0].totalPendapatan,
+                totalHPP: tempLabaRugi.data[0].totalHPP,
+                totalBebanOperasional:
+                  tempLabaRugi.data[0].totalBebanOperasional - parseInt(debet),
+                labaKotor: tempLabaRugi.data[0].labaKotor,
+                labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet)
+              }
+            );
+          }
         } else {
+          // Kredit Pendapatan
+          alert("Masuk Kredit Pendapatan");
           // Patch Neraca Saldo
           tempIdNeracaSaldo = await axios.patch(
             `${tempUrl}/neracaSaldos/${tempNeracaSaldo.data._id}`,
@@ -90,8 +161,36 @@ const TampilAJurnalUmum = () => {
                 (parseInt(kredit) - parseInt(debet))
             }
           );
+          // Patch Laba Rugi
+          if (kodeAccount.slice(0, 3) === "301") {
+            // Laba Rugi Pendapatan Kredit
+            tempLabaRugiTransaksiOther.data.push({
+              idNeracaSaldo: tempIdNeracaSaldo.data._id,
+              kodeAccount,
+              namaAccount,
+              kelompokAccount: kodeAccount.slice(0, 3),
+              total:
+                tempLabaRugiTransaksi.data[0].total -
+                (parseInt(kredit) - parseInt(debet))
+            });
+            await axios.patch(
+              `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
+              {
+                tanggal: tempLabaRugi.data[0].tanggal,
+                transaksi: tempLabaRugiTransaksiOther.data,
+                totalPendapatan:
+                  tempLabaRugi.data[0].totalPendapatan - parseInt(kredit),
+                totalHPP: tempLabaRugi.data[0].totalHPP,
+                totalBebanOperasional:
+                  tempLabaRugi.data[0].totalBebanOperasional,
+                labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(kredit),
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(kredit)
+              }
+            );
+          }
         }
       }
+      alert("Pass");
       // Delete A Jurnal Umum
       await axios.delete(`${tempUrl}/aJurnalUmums/${idAJurnalUmum}`);
       // Delete Laporan Buku Besar

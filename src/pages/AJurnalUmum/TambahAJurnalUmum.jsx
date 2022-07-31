@@ -150,7 +150,7 @@ const TambahAJurnalUmum = () => {
                 totalHPP: tempLabaRugi.data[0].totalHPP,
                 totalBebanOperasional:
                   tempLabaRugi.data[0].totalBebanOperasional + parseInt(debet),
-                labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(debet),
+                labaKotor: tempLabaRugi.data[0].labaKotor,
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
               }
             );

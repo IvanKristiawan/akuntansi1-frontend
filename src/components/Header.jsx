@@ -19,6 +19,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
+import "./font.css";
 
 function Header() {
   const location = useLocation();
@@ -118,12 +119,21 @@ function Header() {
             alignItems: "center"
           }}
         >
-          <Avatar
-            alt="Company Profile"
-            src="https://res.cloudinary.com/dbtag5lau/image/upload/v1650168835/jj5aoh7yg4w1yerrg1qn.jpg"
-          />
-          <Typography sx={{ marginLeft: 1, color: "#757575" }}>
-            Nama Perusahaan
+          <Typography
+            sx={{
+              marginLeft: 1,
+              color: "#757575",
+              fontFamily: "Square Peg",
+              fontSize: "35px"
+            }}
+          >
+            Akun
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{ fontFamily: "Square Peg", fontWeight: "bold" }}
+          >
+            Ti
           </Typography>
         </Box>
         {screenSize >= 650 ? (
@@ -134,13 +144,20 @@ function Header() {
                 flexDirection: "row",
                 alignItems: "center",
                 padding: 1,
-                borderRadius: 1,
+                borderRadius: 2,
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" }
               }}
               onClick={openProfile}
             >
-              <Typography sx={{ color: "#757575" }}>Ivan Kristiawan</Typography>
+              <Avatar
+                alt="Company Profile"
+                src="https://res.cloudinary.com/dbtag5lau/image/upload/v1650168835/jj5aoh7yg4w1yerrg1qn.jpg"
+                sx={{ width: 30, height: 30 }}
+              />
+              <Typography sx={{ color: "#757575", ml: 1 }}>
+                Ivan Kristiawan
+              </Typography>
               <ArrowDropDownIcon />
             </Box>
             {profil && (

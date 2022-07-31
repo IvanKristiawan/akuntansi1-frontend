@@ -11,7 +11,11 @@ import {
   ButtonGroup
 } from "@mui/material";
 import { ShowTableJurnalUmum } from "../../components/ShowTable";
-import { Loader, usePagination, ButtonModifier } from "../../components";
+import {
+  Loader,
+  usePagination,
+  ButtonModifierForJurnalUmum
+} from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -95,15 +99,6 @@ const TampilJurnalUmum = () => {
   const deleteUser = async (id) => {
     try {
       setLoading(true);
-      for (let aJurnalUmum of aJurnalUmums) {
-        await axios.delete(`${tempUrl}/aJurnalUmums/${aJurnalUmum._id}`);
-        await axios.delete(
-          `${tempUrl}/laporanBukuBesars/${aJurnalUmum.idLaporanBukuBesar}`
-        );
-        await axios.delete(
-          `${tempUrl}/neracaSaldos/${aJurnalUmum.idNeracaSaldo}`
-        );
-      }
       await axios.delete(`${tempUrl}/jurnalUmums/${id}`);
       setLoading(false);
       navigate("/daftarJurnalUmum");
@@ -162,12 +157,13 @@ const TampilJurnalUmum = () => {
           justifyContent: "center"
         }}
       >
-        <ButtonModifier
+        <ButtonModifierForJurnalUmum
           id={id}
           kode={"test"}
           addLink={`/daftarJurnalUmum/jurnalUmum/${id}/tambahAJurnalUmum`}
           editLink={`/daftarJurnalUmum/jurnalUmum/${id}/edit`}
           deleteUser={deleteUser}
+          aJurnalUmums={aJurnalUmums}
         />
       </Box>
       <Box

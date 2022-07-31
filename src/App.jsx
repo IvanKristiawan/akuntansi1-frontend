@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles.css";
 import { Paper, Box } from "@mui/material";
-import { Header } from "./components/index";
+import { Header, Footer } from "./components/index";
 import { useStateContext } from "./contexts/ContextProvider";
 import {
   KelompokBukuBesar,
@@ -39,7 +39,14 @@ export default function App() {
       <Box sx={{ backgroundColor: "#e0e0e0" }}>
         <BrowserRouter>
           <Header />
-          <Paper sx={{ margin: 1, padding: 2, backgroundColor: "#fafafa" }}>
+          <Paper
+            sx={{
+              margin: screenSize >= 1000 ? 5 : 1,
+              mb: 0,
+              padding: 2,
+              backgroundColor: "#fafafa"
+            }}
+          >
             <Routes>
               {/* <Route path="/dashboard" element={<KelompokBukuBesar />} /> */}
               {/* <Route path="/tambahTransaksi" element={<KelompokBukuBesar />} /> */}
@@ -101,6 +108,7 @@ export default function App() {
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>
+          <Footer />
         </BrowserRouter>
       </Box>
     </div>

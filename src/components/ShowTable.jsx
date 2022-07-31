@@ -681,3 +681,27 @@ export function ShowLabaRugi({ currentPosts, kelompokAccount }) {
       </>
     ));
 }
+
+export function ShowPerubahanModal({ currentPosts, kode, nama }) {
+  return (
+    <>
+      <TableRow
+        sx={{
+          "&:last-child td, &:last-child th": { border: 0 },
+          "&:hover": { bgcolor: "#eeeeee" },
+          cursor: "pointer"
+        }}
+      >
+        <TableCell component="th" scope="row">
+          {kode}
+        </TableCell>
+        <TableCell>{nama}</TableCell>
+        {nama === "Modal Saham" ? (
+          <TableCell>Rp {currentPosts.modalSaham.toLocaleString()}</TableCell>
+        ) : (
+          <TableCell>Rp {currentPosts.labaBersih.toLocaleString()}</TableCell>
+        )}
+      </TableRow>
+    </>
+  );
+}

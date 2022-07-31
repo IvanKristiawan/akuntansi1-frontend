@@ -21,3 +21,5 @@ export { default as LaporanBukuBesar } from "./LaporanBukuBesar/LaporanBukuBesar
 export { default as NeracaSaldo } from "./NeracaSaldo/NeracaSaldo";
 // Laba Rugi
 export { default as LabaRugi } from "./LabaRugi/LabaRugi";
+// Perubahan Modal
+export { default as PerubahanModal } from "./PerubahanModal/PerubahanModal";

@@ -19,7 +19,8 @@ import {
   TampilAJurnalUmum,
   LaporanBukuBesar,
   NeracaSaldo,
-  LabaRugi
+  LabaRugi,
+  PerubahanModal
 } from "./pages";
 
 export default function App() {
@@ -105,6 +106,8 @@ export default function App() {
               <Route path="/neracaSaldo" element={<NeracaSaldo />} />
               {/* Laba Rugi */}
               <Route path="/labaRugi" element={<LabaRugi />} />
+              {/* Perubahan Modal */}
+              <Route path="/perubahanModal" element={<PerubahanModal />} />
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>

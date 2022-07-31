@@ -73,6 +73,8 @@ const TampilAJurnalUmum = () => {
       let tempNeracaSaldo = await axios.get(
         `${tempUrl}/neracaSaldos/${idNeracaSaldo}`
       );
+      // Get Perubahan Modal
+      let tempPerubahanModal = await axios.get(`${tempUrl}/perubahanModalLast`);
       // Patch Laba Rugi
       let tempLabaRugi = await axios.get(`${tempUrl}/labaRugiLast`);
       alert("There's Neraca Saldo");
@@ -161,6 +163,21 @@ const TampilAJurnalUmum = () => {
                 (parseInt(kredit) - parseInt(debet))
             }
           );
+          if (kodeAccount.slice(0, 3) === "220") {
+            // Kredit Modal
+            alert("Masuk Kredit Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                modalSaham:
+                  tempNeracaSaldo.data.kredit -
+                  (parseInt(kredit) - parseInt(debet)),
+                total:
+                  tempNeracaSaldo.data.kredit -
+                  (parseInt(kredit) - parseInt(debet))
+              }
+            );
+          }
           // Patch Laba Rugi
           if (kodeAccount.slice(0, 3) === "301") {
             // Laba Rugi Pendapatan Kredit

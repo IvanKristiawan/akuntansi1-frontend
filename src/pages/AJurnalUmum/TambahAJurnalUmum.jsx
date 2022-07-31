@@ -128,6 +128,14 @@ const TambahAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
               }
             );
+            alert("Hit HPP Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet),
+                total: tempPerubahanModal.data[0].total - parseInt(debet)
+              }
+            );
           } else if (kodeAccount.slice(0, 3) === "310") {
             // Biaya
             alert("Masuk Biaya");
@@ -154,6 +162,14 @@ const TambahAJurnalUmum = () => {
                   tempLabaRugi.data[0].totalBebanOperasional + parseInt(debet),
                 labaKotor: tempLabaRugi.data[0].labaKotor,
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+              }
+            );
+            alert("Hit Biaya Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet),
+                total: tempPerubahanModal.data[0].total - parseInt(debet)
               }
             );
           }
@@ -209,6 +225,14 @@ const TambahAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
               }
             );
+            alert("Hit Pendapatan Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit),
+                total: tempPerubahanModal.data[0].total + parseInt(kredit)
+              }
+            );
           }
         }
       } else {
@@ -254,6 +278,14 @@ const TambahAJurnalUmum = () => {
               labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
             }
           );
+          alert("Hit Pendapatan Perubahan Modal");
+          await axios.patch(
+            `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+            {
+              labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit),
+              total: tempPerubahanModal.data[0].total + parseInt(kredit)
+            }
+          );
         } else if (kodeAccount.slice(0, 3) === "304") {
           // DEBET HPP
           alert("Hit debet hpp");
@@ -274,6 +306,14 @@ const TambahAJurnalUmum = () => {
               totalBebanOperasional: tempLabaRugi.data[0].totalBebanOperasional,
               labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(debet),
               labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+            }
+          );
+          alert("Hit HPP Perubahan Modal");
+          await axios.patch(
+            `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+            {
+              labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet),
+              total: tempPerubahanModal.data[0].total - parseInt(debet)
             }
           );
         } else if (kodeAccount.slice(0, 3) === "310") {
@@ -297,6 +337,14 @@ const TambahAJurnalUmum = () => {
                 tempLabaRugi.data[0].totalBebanOperasional + parseInt(debet),
               labaKotor: tempLabaRugi.data[0].labaKotor,
               labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
+            }
+          );
+          alert("Hit Biaya Perubahan Modal");
+          await axios.patch(
+            `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+            {
+              labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet),
+              total: tempPerubahanModal.data[0].total - parseInt(debet)
             }
           );
         }

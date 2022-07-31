@@ -122,6 +122,14 @@ const TampilAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet)
               }
             );
+            alert("Hit HPP Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet),
+                total: tempPerubahanModal.data[0].total + parseInt(debet)
+              }
+            );
           } else if (kodeAccount.slice(0, 3) === "310") {
             // Biaya
             alert("Masuk Biaya");
@@ -134,9 +142,6 @@ const TampilAJurnalUmum = () => {
                 tempLabaRugiTransaksi.data[0].total -
                 (parseInt(debet) - parseInt(kredit))
             });
-            alert(tempLabaRugiTransaksiOther);
-            alert(tempLabaRugiTransaksiOther.data);
-            alert(tempLabaRugiTransaksiOther.data[0]);
             await axios.patch(
               `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
               {
@@ -148,6 +153,14 @@ const TampilAJurnalUmum = () => {
                   tempLabaRugi.data[0].totalBebanOperasional - parseInt(debet),
                 labaKotor: tempLabaRugi.data[0].labaKotor,
                 labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet)
+              }
+            );
+            alert("Hit Biaya Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(debet),
+                total: tempPerubahanModal.data[0].total + parseInt(debet)
               }
             );
           }
@@ -202,6 +215,14 @@ const TampilAJurnalUmum = () => {
                   tempLabaRugi.data[0].totalBebanOperasional,
                 labaKotor: tempLabaRugi.data[0].labaKotor - parseInt(kredit),
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(kredit)
+              }
+            );
+            alert("Hit Pendapatan Perubahan Modal");
+            await axios.patch(
+              `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
+              {
+                labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(kredit),
+                total: tempPerubahanModal.data[0].total - parseInt(kredit)
               }
             );
           }

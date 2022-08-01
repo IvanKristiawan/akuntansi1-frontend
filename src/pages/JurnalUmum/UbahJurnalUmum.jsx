@@ -43,7 +43,7 @@ const UbahJurnalUmum = () => {
         tanggal
       });
       setLoading(false);
-      navigate(`/daftarJurnalUmum/jurnalUmum/${id}`);
+      navigate(`/daftarJurnalUmum/jurnalUmum/${id}/${noJurnalUmum}`);
     } catch (error) {
       console.log(error);
     }

@@ -68,6 +68,14 @@ const TambahAJurnalUmum = () => {
       let kelompokAccount = kodeAccount.slice(0, 3);
       let tempTotalHarta;
 
+      // Error Handling Debet & Kredit
+      if (isNaN(parseInt(debet))) {
+        setDebet(0);
+      }
+      if (isNaN(parseInt(kredit))) {
+        setKredit(0);
+      }
+
       // Get Neraca Saldo Last
       let tempNeracaSaldo = await axios.get(
         `${tempUrl}/neracaSaldoLast/${kodeAccount}`
@@ -231,7 +239,10 @@ const TambahAJurnalUmum = () => {
             }
           );
           // Patch Laba Rugi
-          if (kelompokAccount === "304") {
+          if (
+            parseInt(kelompokAccount) >= 302 &&
+            parseInt(kelompokAccount) <= 304
+          ) {
             // HPP
             alert("Hit hpp");
             tempLabaRugiTransaksiOther.data.push({
@@ -264,7 +275,10 @@ const TambahAJurnalUmum = () => {
                 total: tempPerubahanModal.data[0].total - parseInt(debet)
               }
             );
-          } else if (kelompokAccount === "310") {
+          } else if (
+            parseInt(kelompokAccount) >= 310 &&
+            parseInt(kelompokAccount) <= 320
+          ) {
             // Biaya
             alert("Masuk Biaya");
             tempLabaRugiTransaksiOther.data.push({
@@ -414,7 +428,10 @@ const TambahAJurnalUmum = () => {
               total: tempPerubahanModal.data[0].total + parseInt(kredit)
             }
           );
-        } else if (kelompokAccount === "304") {
+        } else if (
+          parseInt(kelompokAccount) >= 302 &&
+          parseInt(kelompokAccount) <= 304
+        ) {
           // DEBET HPP
           alert("Hit debet hpp");
           tempLabaRugiTransaksi.data.push({
@@ -444,7 +461,10 @@ const TambahAJurnalUmum = () => {
               total: tempPerubahanModal.data[0].total - parseInt(debet)
             }
           );
-        } else if (kelompokAccount === "310") {
+        } else if (
+          parseInt(kelompokAccount) >= 310 &&
+          parseInt(kelompokAccount) <= 320
+        ) {
           // DEBET BIAYA
           alert("Hit debet biaya");
           tempLabaRugiTransaksi.data.push({
@@ -616,7 +636,10 @@ const TambahAJurnalUmum = () => {
             </Box>
             <Box sx={{ marginTop: 2 }}>
               <Typography sx={{ margin: 1, fontWeight: "500" }}>
-                Debet {debet !== 0 && ` : Rp ${debet.toLocaleString()}`}
+                Debet{" "}
+                {debet !== 0 &&
+                  !isNaN(parseInt(debet)) &&
+                  ` : Rp ${parseInt(debet).toLocaleString()}`}
               </Typography>
               <TextField
                 id="outlined-basic"
@@ -627,13 +650,16 @@ const TambahAJurnalUmum = () => {
                   width: screenSize >= 650 ? "30rem" : "100%"
                 }}
                 onChange={(e) => {
-                  setDebet(parseInt(e.target.value));
+                  setDebet(e.target.value);
                 }}
               />
             </Box>
             <Box sx={{ marginTop: 2 }}>
               <Typography sx={{ margin: 1, fontWeight: "500" }}>
-                Kredit {kredit !== 0 && ` : Rp ${kredit.toLocaleString()}`}
+                Kredit{" "}
+                {kredit !== 0 &&
+                  !isNaN(parseInt(kredit)) &&
+                  ` : Rp ${parseInt(kredit).toLocaleString()}`}
               </Typography>
               <TextField
                 id="outlined-basic"
@@ -643,7 +669,9 @@ const TambahAJurnalUmum = () => {
                   display: "flex",
                   width: screenSize >= 650 ? "30rem" : "100%"
                 }}
-                onChange={(e) => setKredit(parseInt(e.target.value))}
+                onChange={(e) => {
+                  setKredit(e.target.value);
+                }}
               />
             </Box>
           </Box>

@@ -206,7 +206,10 @@ const TampilAJurnalUmum = () => {
             }
           );
           // Patch Laba Rugi
-          if (kodeAccount.slice(0, 3) === "304") {
+          if (
+            parseInt(kelompokAccount) >= 302 &&
+            parseInt(kelompokAccount) <= 304
+          ) {
             // HPP
             alert("Hit hpp");
             tempLabaRugiTransaksiOther.data.push({
@@ -239,7 +242,10 @@ const TampilAJurnalUmum = () => {
                 total: tempPerubahanModal.data[0].total + parseInt(debet)
               }
             );
-          } else if (kodeAccount.slice(0, 3) === "310") {
+          } else if (
+            parseInt(kelompokAccount) >= 310 &&
+            parseInt(kelompokAccount) <= 320
+          ) {
             // Biaya
             alert("Masuk Biaya");
             tempLabaRugiTransaksiOther.data.push({
@@ -285,7 +291,7 @@ const TampilAJurnalUmum = () => {
                 (parseInt(kredit) - parseInt(debet))
             }
           );
-          if (kodeAccount.slice(0, 3) === "220") {
+          if (kelompokAccount === "220") {
             // Kredit Modal
             alert("Masuk Kredit Modal");
             await axios.patch(
@@ -301,7 +307,7 @@ const TampilAJurnalUmum = () => {
             );
           }
           // Patch Laba Rugi
-          if (kodeAccount.slice(0, 3) === "301") {
+          if (kelompokAccount === "301") {
             // Laba Rugi Pendapatan Kredit
             tempLabaRugiTransaksiOther.data.push({
               idNeracaSaldo: tempIdNeracaSaldo.data._id,

@@ -22,14 +22,12 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 
-const PerubahanModal = () => {
+const Neraca = () => {
   const [users, setUser] = useState([]);
-  const [perubahanModalForDoc, setPerubahanModalForDoc] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getUsers();
-    getPerubahanModalForDoc();
   }, []);
 
   const getUsers = async () => {
@@ -37,48 +35,6 @@ const PerubahanModal = () => {
     const response = await axios.get(`${tempUrl}/perubahanModalLast`);
     setUser(response.data);
     setLoading(false);
-  };
-
-  const getPerubahanModalForDoc = async () => {
-    setLoading(true);
-    const response = await axios.get(`${tempUrl}/perubahanModalForDoc`);
-    setPerubahanModalForDoc(response.data);
-    setLoading(false);
-  };
-
-  const downloadPdf = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.setDrawColor(0, 0, 255);
-    doc.text(`PT INDUSTRI CONTOH`, 15, 10);
-    doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
-    doc.setFontSize(16);
-    doc.text(`PERUBAHAN MODAL`, 90, 30);
-    doc.setFontSize(10);
-    doc.line(15, 35, 200, 35);
-    doc.text(`Modal Saham`, 15, 40);
-    doc.text(`Rp ${users[0].modalSaham.toLocaleString()}`, 15, 45);
-    doc.line(15, 50, 200, 50);
-    doc.text(`Laba Bersih`, 15, 55);
-    doc.text(`Rp ${users[0].labaBersih.toLocaleString()}`, 15, 60);
-    doc.line(15, 65, 200, 65);
-    doc.text(`Total Modal`, 15, 70);
-    doc.text(`Rp ${users[0].total.toLocaleString()}`, 15, 75);
-    doc.line(15, 80, 200, 80);
-    doc.setFontSize(12);
-    doc.save(`perubahanModal.pdf`);
-  };
-
-  const downloadExcel = () => {
-    const workSheet = XLSX.utils.json_to_sheet(perubahanModalForDoc);
-    const workBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, workSheet, `Perubahan Modal`);
-    // Buffer
-    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-    // Binary String
-    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-    // Download
-    XLSX.writeFile(workBook, `perubahanModal.xlsx`);
   };
 
   if (loading) {
@@ -91,24 +47,6 @@ const PerubahanModal = () => {
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Perubahan Modal
       </Typography>
-
-      <Box
-        sx={{
-          mt: 4,
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center"
-        }}
-      >
-        <ButtonGroup variant="text" color="secondary">
-          <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
-            PDF
-          </Button>
-          <Button startIcon={<DownloadIcon />} onClick={() => downloadExcel()}>
-            EXCEL
-          </Button>
-        </ButtonGroup>
-      </Box>
 
       {users.map((user, index) => (
         <>
@@ -199,4 +137,4 @@ const PerubahanModal = () => {
   );
 };
 
-export default PerubahanModal;
+export default Neraca;

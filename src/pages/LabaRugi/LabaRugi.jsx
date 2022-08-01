@@ -103,7 +103,7 @@ const LabaRugi = () => {
       columns: columns.map((col) => ({ ...col, dataKey: col.field })),
       body: labaRugiTransaksiAll
     });
-    doc.save(`neracaSaldo.pdf`);
+    doc.save(`labaRugi.pdf`);
   };
 
   const downloadExcel = () => {

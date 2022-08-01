@@ -6,16 +6,11 @@ import {
   TextField,
   Typography,
   Divider,
-  Pagination,
   Button,
   ButtonGroup
 } from "@mui/material";
 import { ShowTableJurnalUmum } from "../../components/ShowTable";
-import {
-  Loader,
-  usePagination,
-  ButtonModifierForJurnalUmum
-} from "../../components";
+import { Loader, ButtonModifierForJurnalUmum } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -38,7 +33,6 @@ const TampilJurnalUmum = () => {
   const navigate = useNavigate();
 
   const columns = [
-    { title: "Tanggal", field: "tanggal" },
     { title: "Kode Account", field: "kodeAccount" },
     { title: "Nama Account", field: "namaAccount" },
     { title: "Keterangan", field: "keterangan" },
@@ -47,21 +41,6 @@ const TampilJurnalUmum = () => {
   ];
 
   const [loading, setLoading] = useState(false);
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 20;
-
-  // Get current posts
-  const indexOfLastPost = page * PER_PAGE;
-  const indexOfFirstPost = indexOfLastPost - PER_PAGE;
-  const currentPosts = aJurnalUmums.slice(indexOfFirstPost, indexOfLastPost);
-
-  const count = Math.ceil(aJurnalUmums.length / PER_PAGE);
-  const _DATA = usePagination(aJurnalUmums, PER_PAGE);
-
-  const handleChange = (e, p) => {
-    setPage(p);
-    _DATA.jump(p);
-  };
 
   useEffect(() => {
     getAJurnalUmums();
@@ -114,7 +93,7 @@ const TampilJurnalUmum = () => {
     doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
     doc.setFontSize(16);
     doc.text(`BUKTI JURNAL`, 90, 30);
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.text(`No.Bukti : ${noJurnalUmum}`, 15, 40);
     doc.text(`Tanggal : ${tanggal}`, 15, 45);
     doc.text(`Total Debet : ${totalDebet.toLocaleString()}`, 15, 50);
@@ -241,7 +220,7 @@ const TampilJurnalUmum = () => {
       </Box>
       <Divider sx={{ pt: 4 }} />
       <Box sx={{ pt: 4, display: "flex", justifyContent: "center" }}>
-        <ShowTableJurnalUmum id={id} currentPosts={currentPosts} />
+        <ShowTableJurnalUmum id={id} currentPosts={aJurnalUmums} />
       </Box>
       <Box
         sx={{

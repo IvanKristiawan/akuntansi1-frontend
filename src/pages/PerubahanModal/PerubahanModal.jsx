@@ -47,25 +47,50 @@ const PerubahanModal = () => {
   };
 
   const downloadPdf = () => {
+    let y = 35;
+    let x1 = 20;
+    let x2 = 82;
+    let x3 = 150;
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.setDrawColor(0, 0, 255);
+    doc.setDrawColor(101, 101, 101);
     doc.text(`PT INDUSTRI CONTOH`, 15, 10);
     doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
     doc.setFontSize(16);
     doc.text(`PERUBAHAN MODAL`, 90, 30);
     doc.setFontSize(10);
-    doc.line(15, 35, 200, 35);
-    doc.text(`Modal Saham`, 15, 40);
-    doc.text(`Rp ${users[0].modalSaham.toLocaleString()}`, 15, 45);
-    doc.line(15, 50, 200, 50);
-    doc.text(`Laba Bersih`, 15, 55);
-    doc.text(`Rp ${users[0].labaBersih.toLocaleString()}`, 15, 60);
-    doc.line(15, 65, 200, 65);
-    doc.text(`Total Modal`, 15, 70);
-    doc.text(`Rp ${users[0].total.toLocaleString()}`, 15, 75);
-    doc.line(15, 80, 200, 80);
-    doc.setFontSize(12);
+    doc.line(15, y, 200, y);
+    y += 5;
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Modal`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(`Modal Saham - 22001`, x1 + 5, y);
+    doc.text(`Rp ${perubahanModalForDoc[0].modalSaham}`, x3, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(`Laba Bersih`, x1 + 5, y);
+    doc.text(`Rp ${perubahanModalForDoc[0].labaBersih}`, x3, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Modal`, x1, y);
+    doc.text(`Rp ${perubahanModalForDoc[0].total}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+
+    // Vertical Line
+    doc.line(15, 35, 15, y);
+    doc.line(200, 35, 200, y);
+    doc.line(148, 35, 148, y);
     doc.save(`perubahanModal.pdf`);
   };
 

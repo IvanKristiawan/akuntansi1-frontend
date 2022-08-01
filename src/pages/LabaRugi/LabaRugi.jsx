@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   Box,
   Typography,
-  Divider,
   TableContainer,
   Table,
   Paper,
@@ -30,12 +29,6 @@ const LabaRugi = () => {
     []
   );
   const [loading, setLoading] = useState(false);
-
-  const columns = [
-    { title: "Kode", field: "kodeAccount" },
-    { title: "Akun", field: "namaAccount" },
-    { title: "Total", field: "total" }
-  ];
 
   useEffect(() => {
     getUsers();
@@ -73,36 +66,114 @@ const LabaRugi = () => {
   };
 
   const downloadPdf = () => {
+    let y = 35;
+    let x1 = 20;
+    let x2 = 82;
+    let x3 = 150;
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.setDrawColor(0, 0, 255);
+    doc.setDrawColor(101, 101, 101);
     doc.text(`PT INDUSTRI CONTOH`, 15, 10);
     doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
     doc.setFontSize(16);
     doc.text(`LABA RUGI`, 90, 30);
     doc.setFontSize(10);
-    doc.line(15, 35, 200, 35);
-    doc.text(`Total Pendapatan dari Penjualan`, 15, 40);
-    doc.text(`Rp ${users[0].totalPendapatan.toLocaleString()}`, 15, 45);
-    doc.line(15, 50, 200, 50);
-    doc.text(`Total Harga Pokok Penjualan`, 15, 55);
-    doc.text(`Rp ${users[0].totalHPP.toLocaleString()}`, 15, 60);
-    doc.line(15, 65, 200, 65);
-    doc.text(`Laba Kotor`, 15, 70);
-    doc.text(`Rp ${users[0].labaKotor.toLocaleString()}`, 15, 75);
-    doc.line(15, 80, 200, 80);
-    doc.text(`Total Beban Operasional`, 15, 85);
-    doc.text(`Rp ${users[0].totalBebanOperasional.toLocaleString()}`, 15, 90);
-    doc.line(15, 95, 200, 95);
-    doc.text(`Laba Bersih`, 15, 100);
-    doc.text(`Rp ${users[0].labaBersih.toLocaleString()}`, 15, 105);
-    doc.line(15, 110, 200, 110);
-    doc.setFontSize(12);
-    doc.autoTable({
-      margin: { top: 115 },
-      columns: columns.map((col) => ({ ...col, dataKey: col.field })),
-      body: labaRugiTransaksiAll
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(`Kode`, 43, y);
+    doc.text(`Akun`, 110, y);
+    doc.text(`Total`, 170, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Pendapatan dari Penjualan`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    labaRugiTransaksiAll.map((val) => {
+      if (val.kodeAccount === "30101") {
+        doc.text(`${val.kodeAccount}`, x1 + 5, y);
+        doc.text(`${val.namaAccount}`, x2, y);
+        doc.text(`Rp ${val.total}`, x3, y);
+      }
     });
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Pendapatan dari Penjualan`, x1, y);
+    doc.text(`Rp ${users[0].totalPendapatan.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Harga Pokok Penjualan`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    labaRugiTransaksiAll.map((val) => {
+      if (val.kodeAccount === "30401") {
+        doc.text(`${val.kodeAccount}`, x1 + 5, y);
+        doc.text(`${val.namaAccount}`, x2, y);
+        doc.text(`Rp ${val.total}`, x3, y);
+      }
+    });
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Harga Pokok Penjualan`, x1, y);
+    doc.text(`Rp ${users[0].totalHPP.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Laba Kotor`, x1, y);
+    doc.text(`Rp ${users[0].labaKotor.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Beban Operasional`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    labaRugiTransaksiAll.map((val) => {
+      if (val.kelompokAccount === "310") {
+        y += 5;
+        doc.text(`${val.kodeAccount}`, x1 + 5, y);
+        doc.text(`${val.namaAccount}`, x2, y);
+        doc.text(`Rp ${val.total}`, x3, y);
+        y += 3;
+        doc.line(15, y, 200, y);
+      }
+    });
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Beban Operasional`, x1, y);
+    doc.text(`Rp ${users[0].totalBebanOperasional.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Laba Bersih`, x1, y);
+    doc.text(`Rp ${users[0].labaBersih.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+
+    // Vertical Line
+    doc.line(15, 35, 15, y);
+    doc.line(200, 35, 200, y);
+    doc.line(148, 35, 148, y);
+    doc.line(80, 35, 80, y);
     doc.save(`labaRugi.pdf`);
   };
 

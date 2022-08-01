@@ -156,7 +156,11 @@ const PerubahanModal = () => {
                     scope="row"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Modal
+                    <Typography
+                      sx={{ pl: 2, fontWeight: "bold", fontSize: "14px" }}
+                    >
+                      Modal
+                    </Typography>
                   </TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>

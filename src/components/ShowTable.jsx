@@ -673,7 +673,9 @@ export function ShowLabaRugi({ currentPosts, kelompokAccount }) {
           }}
         >
           <TableCell component="th" scope="row">
-            {user.kodeAccount}
+            <Typography sx={{ pl: 2, fontSize: "14px" }}>
+              {user.kodeAccount}
+            </Typography>
           </TableCell>
           <TableCell>{user.namaAccount}</TableCell>
           <TableCell>Rp {user.total.toLocaleString()}</TableCell>
@@ -693,7 +695,7 @@ export function ShowPerubahanModal({ currentPosts, kode, nama }) {
         }}
       >
         <TableCell component="th" scope="row">
-          {kode}
+          <Typography sx={{ pl: 4, fontSize: "14px" }}>{kode}</Typography>
         </TableCell>
         <TableCell>{nama}</TableCell>
         {nama === "Modal Saham" ? (
@@ -701,6 +703,26 @@ export function ShowPerubahanModal({ currentPosts, kode, nama }) {
         ) : (
           <TableCell>Rp {currentPosts.labaBersih.toLocaleString()}</TableCell>
         )}
+      </TableRow>
+    </>
+  );
+}
+
+export function ShowNeraca({ kode, nama, total }) {
+  return (
+    <>
+      <TableRow
+        sx={{
+          "&:last-child td, &:last-child th": { border: 0 },
+          "&:hover": { bgcolor: "#eeeeee" },
+          cursor: "pointer"
+        }}
+      >
+        <TableCell component="th" scope="row">
+          <Typography sx={{ pl: 4, fontSize: "14px" }}>{kode}</Typography>
+        </TableCell>
+        <TableCell>{nama}</TableCell>
+        <TableCell>Rp {total.toLocaleString()}</TableCell>
       </TableRow>
     </>
   );

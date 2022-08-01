@@ -23,3 +23,5 @@ export { default as NeracaSaldo } from "./NeracaSaldo/NeracaSaldo";
 export { default as LabaRugi } from "./LabaRugi/LabaRugi";
 // Perubahan Modal
 export { default as PerubahanModal } from "./PerubahanModal/PerubahanModal";
+// Neraca
+export { default as Neraca } from "./Neraca/Neraca";

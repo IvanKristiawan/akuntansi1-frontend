@@ -20,7 +20,8 @@ import {
   LaporanBukuBesar,
   NeracaSaldo,
   LabaRugi,
-  PerubahanModal
+  PerubahanModal,
+  Neraca
 } from "./pages";
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
         <BrowserRouter>
           <Header />
           <Paper
+            elevation={3}
             sx={{
               margin: screenSize >= 1000 ? 5 : 1,
               mb: 0,
@@ -108,6 +110,8 @@ export default function App() {
               <Route path="/labaRugi" element={<LabaRugi />} />
               {/* Perubahan Modal */}
               <Route path="/perubahanModal" element={<PerubahanModal />} />
+              {/* Neraca */}
+              <Route path="/neraca" element={<Neraca />} />
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>

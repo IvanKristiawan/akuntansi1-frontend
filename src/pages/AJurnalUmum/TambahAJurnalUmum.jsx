@@ -66,6 +66,7 @@ const TambahAJurnalUmum = () => {
       let kodeAccount = account.split(" ", 1)[0];
       let namaAccount = account.split("-")[1];
       let kelompokAccount = kodeAccount.slice(0, 3);
+      let tempTotalHarta;
 
       // Get Neraca Saldo Last
       let tempNeracaSaldo = await axios.get(
@@ -96,7 +97,6 @@ const TambahAJurnalUmum = () => {
 
       // Get Kewajiban
       let tempKewajibanLast = await axios.get(`${tempUrl}/kewajibanLast`);
-      let tempKewajibanAll = await axios.get(`${tempUrl}/kewajibanAll`);
       let tempKewajiban = await axios.get(
         `${tempUrl}/kewajiban/${kodeAccount}`
       );
@@ -127,92 +127,98 @@ const TambahAJurnalUmum = () => {
       alert("HIt here");
 
       // Patch Harta dan Kewajiban
-      if (tempNeracaSaldo.data[0]) {
-        if (tempNeracaSaldo.data[0].jenisAccount === "DEBET") {
-          // Debet
-          // Harta
-          if (
-            parseInt(kelompokAccount) >= 101 &&
-            parseInt(kelompokAccount) <= 110
-          ) {
-            // Harta Lancar
-            alert("Harta Lancar");
-            alert(tempHartaLancarOther);
-            tempHartaLancarOther.data.push({
-              kodeAccount,
-              namaAccount,
-              kelompokAccount,
-              total:
-                tempHartaLancar.data[0].total +
-                (parseInt(debet) - parseInt(kredit))
-            });
-            alert("Harta Lancar Push");
-            await axios.patch(`${tempUrl}/hartas/${tempHarta.data[0]._id}`, {
-              hartaLancar: tempHartaLancarOther.data,
-              hartaTetap: tempHartaTetapAll.data,
-              totalHartaLancar:
-                tempHarta.data[0].totalHartaLancar +
-                (parseInt(debet) - parseInt(kredit)),
-              totalHartaTetap: tempHarta.data[0].totalHartaTetap,
-              totalHarta:
-                tempHarta.data[0].totalHarta +
-                (parseInt(debet) - parseInt(kredit))
-            });
-            alert("Harta lancar Patch");
-          } else if (
-            parseInt(kelompokAccount) >= 120 &&
-            parseInt(kelompokAccount) <= 129
-          ) {
-            // Harta Tetap
-            alert("Harta Tetap");
-            tempHartaTetapOther.data.push({
-              kodeAccount,
-              namaAccount,
-              kelompokAccount,
-              total:
-                tempHartaTetap.data[0].total +
-                parseInt(debet) -
-                parseInt(kredit)
-            });
-            await axios.patch(`${tempUrl}/hartas/${tempHarta.data[0]._id}`, {
-              hartaTetap: tempHartaTetapOther.data,
-              hartaLancar: tempHartaLancarAll.data,
-              totalHartaLancar: tempHarta.data[0].totalHartaLancar,
-              totalHartaTetap:
-                tempHarta.data[0].totalHartaTetap +
-                (parseInt(debet) - parseInt(kredit)),
-              totalHarta:
-                tempHarta.data[0].totalHarta +
-                (parseInt(debet) - parseInt(kredit))
-            });
-          }
+      // Harta
+      if (
+        parseInt(kelompokAccount) >= 101 &&
+        parseInt(kelompokAccount) <= 110
+      ) {
+        // Harta Lancar
+        alert("Harta Lancar");
+        alert(tempHartaLancarOther);
+        if (tempHartaLancar.data[0]) {
+          alert("There's harta lancar");
+          tempTotalHarta =
+            tempHartaLancar.data[0].total +
+            (parseInt(debet) - parseInt(kredit));
         } else {
-          // Kredit
-          if (
-            parseInt(kelompokAccount) >= 201 &&
-            parseInt(kelompokAccount) <= 211
-          ) {
-            // Hutang / Kewajiban
-            alert("Kewajiban");
-            tempKewajibanOther.data.push({
-              kodeAccount,
-              namaAccount,
-              kelompokAccount,
-              total:
-                tempKewajiban.data[0].total + parseInt(kredit) - parseInt(debet)
-            });
-            await axios.patch(
-              `${tempUrl}/kewajibans/${tempKewajibanLast.data[0]._id}`,
-              {
-                kewajiban: tempKewajibanOther.data,
-                totalKewajiban:
-                  tempKewajibanLast.data[0].totalKewajiban +
-                  (parseInt(kredit) - parseInt(debet))
-              }
-            );
-          }
+          alert("There isn't harta lancar");
+          tempTotalHarta = parseInt(debet) - parseInt(kredit);
         }
+        tempHartaLancarOther.data.push({
+          kodeAccount,
+          namaAccount,
+          kelompokAccount,
+          total: tempTotalHarta
+        });
+        alert("Harta Lancar Push");
+        await axios.patch(`${tempUrl}/hartas/${tempHarta.data[0]._id}`, {
+          hartaLancar: tempHartaLancarOther.data,
+          hartaTetap: tempHartaTetapAll.data,
+          totalHartaLancar:
+            tempHarta.data[0].totalHartaLancar +
+            (parseInt(debet) - parseInt(kredit)),
+          totalHartaTetap: tempHarta.data[0].totalHartaTetap,
+          totalHarta:
+            tempHarta.data[0].totalHarta + (parseInt(debet) - parseInt(kredit))
+        });
+        alert("Harta lancar Patch");
+      } else if (
+        parseInt(kelompokAccount) >= 120 &&
+        parseInt(kelompokAccount) <= 129
+      ) {
+        // Harta Tetap
+        alert("Harta Tetap");
+        if (tempHartaLancar.data[0]) {
+          tempTotalHarta =
+            tempHartaTetap.data[0].total + parseInt(debet) - parseInt(kredit);
+        } else {
+          tempTotalHarta = parseInt(debet) - parseInt(kredit);
+        }
+        tempHartaTetapOther.data.push({
+          kodeAccount,
+          namaAccount,
+          kelompokAccount,
+          total: tempTotalHarta
+        });
+        await axios.patch(`${tempUrl}/hartas/${tempHarta.data[0]._id}`, {
+          hartaTetap: tempHartaTetapOther.data,
+          hartaLancar: tempHartaLancarAll.data,
+          totalHartaLancar: tempHarta.data[0].totalHartaLancar,
+          totalHartaTetap:
+            tempHarta.data[0].totalHartaTetap +
+            (parseInt(debet) - parseInt(kredit)),
+          totalHarta:
+            tempHarta.data[0].totalHarta + (parseInt(debet) - parseInt(kredit))
+        });
+      } else if (
+        parseInt(kelompokAccount) >= 201 &&
+        parseInt(kelompokAccount) <= 211
+      ) {
+        // Hutang / Kewajiban
+        alert("Kewajiban");
+        if (tempHartaLancar.data[0]) {
+          tempTotalHarta =
+            tempKewajiban.data[0].total + parseInt(kredit) - parseInt(debet);
+        } else {
+          tempTotalHarta = parseInt(kredit) - parseInt(debet);
+        }
+        tempKewajibanOther.data.push({
+          kodeAccount,
+          namaAccount,
+          kelompokAccount,
+          total: tempTotalHarta
+        });
+        await axios.patch(
+          `${tempUrl}/kewajibans/${tempKewajibanLast.data[0]._id}`,
+          {
+            kewajiban: tempKewajibanOther.data,
+            totalKewajiban:
+              tempKewajibanLast.data[0].totalKewajiban +
+              (parseInt(kredit) - parseInt(debet))
+          }
+        );
       }
+
       if (tempNeracaSaldo.data[0]) {
         if (tempNeracaSaldo.data[0].jenisAccount === "DEBET") {
           // Patch Neraca Saldo
@@ -225,7 +231,7 @@ const TambahAJurnalUmum = () => {
             }
           );
           // Patch Laba Rugi
-          if (kodeAccount.slice(0, 3) === "304") {
+          if (kelompokAccount === "304") {
             // HPP
             alert("Hit hpp");
             tempLabaRugiTransaksiOther.data.push({
@@ -258,7 +264,7 @@ const TambahAJurnalUmum = () => {
                 total: tempPerubahanModal.data[0].total - parseInt(debet)
               }
             );
-          } else if (kodeAccount.slice(0, 3) === "310") {
+          } else if (kelompokAccount === "310") {
             // Biaya
             alert("Masuk Biaya");
             tempLabaRugiTransaksiOther.data.push({
@@ -306,7 +312,7 @@ const TambahAJurnalUmum = () => {
                 (parseInt(kredit) - parseInt(debet))
             }
           );
-          if (kodeAccount.slice(0, 3) === "220") {
+          if (kelompokAccount === "220") {
             // Kredit Modal
             alert("Masuk Kredit Modal");
             await axios.patch(
@@ -322,7 +328,7 @@ const TambahAJurnalUmum = () => {
             );
           }
           // Patch Laba Rugi
-          if (kodeAccount.slice(0, 3) === "301") {
+          if (kelompokAccount === "301") {
             // Laba Rugi Pendapatan Kredit
             tempLabaRugiTransaksiOther.data.push({
               idNeracaSaldo: tempIdNeracaSaldo.data._id,
@@ -376,7 +382,7 @@ const TambahAJurnalUmum = () => {
         });
         // Patch Laba Rugi
         alert("Hit 1");
-        if (kodeAccount.slice(0, 3) === "301") {
+        if (kelompokAccount === "301") {
           // KREDIT PENJUALAN
           // aaaaaaaa
           alert("Hit kredit penjualan");
@@ -408,7 +414,7 @@ const TambahAJurnalUmum = () => {
               total: tempPerubahanModal.data[0].total + parseInt(kredit)
             }
           );
-        } else if (kodeAccount.slice(0, 3) === "304") {
+        } else if (kelompokAccount === "304") {
           // DEBET HPP
           alert("Hit debet hpp");
           tempLabaRugiTransaksi.data.push({
@@ -438,7 +444,7 @@ const TambahAJurnalUmum = () => {
               total: tempPerubahanModal.data[0].total - parseInt(debet)
             }
           );
-        } else if (kodeAccount.slice(0, 3) === "310") {
+        } else if (kelompokAccount === "310") {
           // DEBET BIAYA
           alert("Hit debet biaya");
           tempLabaRugiTransaksi.data.push({
@@ -472,6 +478,7 @@ const TambahAJurnalUmum = () => {
         }
       }
       alert("Hit 3");
+
       // Post Laporan Buku Besar
       let tempLaporanBukuBesar = await axios.post(
         `${tempUrl}/laporanBukuBesars`,
@@ -484,6 +491,7 @@ const TambahAJurnalUmum = () => {
           kredit
         }
       );
+
       // Post A Jurnal Umum
       await axios.post(`${tempUrl}/aJurnalUmums`, {
         noJurnalUmum: jurnalUmums.noJurnalUmum,
@@ -496,6 +504,7 @@ const TambahAJurnalUmum = () => {
         debet,
         kredit
       });
+
       // Patch Jurnal Umum
       await axios.patch(`${tempUrl}/jurnalUmums/${id}`, {
         totalDebet: jurnalUmums.totalDebet + parseInt(debet),

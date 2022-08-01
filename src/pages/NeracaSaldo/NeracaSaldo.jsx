@@ -97,20 +97,24 @@ const NeracaSaldo = () => {
         </ButtonGroup>
       </Box>
 
-      {users.map((user, index) => (
-        <>
-          <Divider sx={{ pt: 4 }} />
-          <Typography variant="h6" sx={{ fontWeight: "500", pt: 2 }}>
-            {user.kodeAccount} - {user.namaAccount}
-          </Typography>
-          <Box sx={{ pt: 2, display: "flex", justifyContent: "center" }}>
-            <ShowNeracaSaldo
-              currentPosts={users}
-              kodeBukuBesar={user.kodeAccount}
-            />
-          </Box>
-        </>
-      ))}
+      {users.map((user, index) =>
+        user.debet || user.kredit ? (
+          <>
+            <Divider sx={{ pt: 4 }} />
+            <Typography variant="h6" sx={{ fontWeight: "500", pt: 2 }}>
+              {user.kodeAccount} - {user.namaAccount}
+            </Typography>
+            <Box sx={{ pt: 2, display: "flex", justifyContent: "center" }}>
+              <ShowNeracaSaldo
+                currentPosts={users}
+                kodeBukuBesar={user.kodeAccount}
+              />
+            </Box>
+          </>
+        ) : (
+          <> </>
+        )
+      )}
     </Box>
   );
 };

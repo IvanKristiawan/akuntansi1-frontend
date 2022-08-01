@@ -70,6 +70,7 @@ const Neraca = () => {
     setTotalKewajibanModal(
       getKewajiban.data[0].totalKewajiban + getModal.data[0].total
     );
+    // Post Total
     setLoading(false);
   };
 

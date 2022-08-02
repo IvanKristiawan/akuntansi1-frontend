@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   Box,
   Typography,
-  Divider,
   TableContainer,
   Table,
   Paper,
@@ -14,7 +13,7 @@ import {
   ButtonGroup,
   Button
 } from "@mui/material";
-import { ShowPerubahanModal, ShowNeraca } from "../../components/ShowTable";
+import { ShowNeraca } from "../../components/ShowTable";
 import { Loader } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -28,6 +27,7 @@ const Neraca = () => {
   const [hartaTetap, setHartaTetap] = useState([]);
   const [kewajiban, setKewajiban] = useState([]);
   const [modal, setModal] = useState([]);
+  const [modalForDoc, setModalForDoc] = useState([]);
   const [totalHartaLancar, setTotalHartaLancar] = useState(0);
   const [totalHartaTetap, setTotalHartaTetap] = useState(0);
   const [totalHarta, setTotalHarta] = useState(0);
@@ -65,6 +65,8 @@ const Neraca = () => {
     setKewajiban(getKewajibanAll.data);
     // Get Modal
     const getModal = await axios.get(`${tempUrl}/perubahanModalLast`);
+    const getModalForDoc = await axios.get(`${tempUrl}/perubahanModalForDoc`);
+    setModalForDoc(getModalForDoc.data);
     setModal(getModal.data[0]);
     setTotalModal(getModal.data[0].total);
     setTotalKewajibanModal(
@@ -72,6 +74,167 @@ const Neraca = () => {
     );
     // Post Total
     setLoading(false);
+  };
+
+  const downloadPdf = () => {
+    let y = 35;
+    let x1 = 20;
+    let x2 = 82;
+    let x3 = 150;
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.setDrawColor(101, 101, 101);
+    doc.text(`PT INDUSTRI CONTOH`, 15, 10);
+    doc.text(`Jl. Kom Laut Yos Sudarso - Sumatera Utara`, 15, 15);
+    doc.setFontSize(16);
+    doc.text(`NERACA`, 90, 30);
+    doc.setFontSize(10);
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(`Kode`, 43, y);
+    doc.text(`Akun`, 110, y);
+    doc.text(`Total`, 170, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Harta`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 7;
+    doc.setFont(undefined, "bold");
+    doc.text(`Harta Lancar`, x1 + 5, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    hartaLancar.map((val) => {
+      y += 5;
+      doc.text(`${val.kodeAccount}`, x1 + 10, y);
+      doc.text(`${val.namaAccount}`, x2, y);
+      doc.text(`Rp ${val.total}`, x3, y);
+      y += 3;
+      doc.line(15, y, 200, y);
+    });
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Harta Lancar`, x1 + 5, y);
+    doc.text(`Rp ${totalHartaLancar.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 7;
+    doc.setFont(undefined, "bold");
+    doc.text(`Harta Tetap`, x1 + 5, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    hartaTetap.map((val) => {
+      y += 5;
+      doc.text(`${val.kodeAccount}`, x1 + 10, y);
+      doc.text(`${val.namaAccount}`, x2, y);
+      doc.text(`Rp ${val.total}`, x3, y);
+      y += 3;
+      doc.line(15, y, 200, y);
+    });
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Harta Tetap`, x1 + 5, y);
+    doc.text(`Rp ${totalHartaTetap.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Harta`, x1, y);
+    doc.text(`Rp ${totalHarta.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 9;
+    doc.setFont(undefined, "bold");
+    doc.text(`Kewajiban dan Modal`, x1, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 7;
+    doc.setFont(undefined, "bold");
+    doc.text(`Kewajiban`, x1 + 5, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    kewajiban.map((val) => {
+      y += 5;
+      doc.text(`${val.kodeAccount}`, x1 + 10, y);
+      doc.text(`${val.namaAccount}`, x2, y);
+      doc.text(`Rp ${val.total}`, x3, y);
+      y += 3;
+      doc.line(15, y, 200, y);
+    });
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Kewajiban`, x1 + 5, y);
+    doc.text(`Rp ${totalKewajiban.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 7;
+    doc.setFont(undefined, "bold");
+    doc.text(`Modal`, x1 + 5, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(``, x1 + 10, y);
+    doc.text(`Laba Bersih`, x2, y);
+    doc.text(`Rp ${modal.labaBersih.toLocaleString()}`, x3, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.text(`22001`, x1 + 10, y);
+    doc.text(`Modal Saham`, x2, y);
+    doc.text(`Rp ${modal.modalSaham.toLocaleString()}`, x3, y);
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Modal`, x1 + 5, y);
+    doc.text(`Rp ${totalModal.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+    y += 5;
+    doc.setFont(undefined, "bold");
+    doc.text(`Total Kewajiban dan Modal`, x1, y);
+    doc.text(`Rp ${totalKewajibanModal.toLocaleString()}`, x3, y);
+    doc.setFont(undefined, "normal");
+    y += 3;
+    doc.line(15, y, 200, y);
+
+    // Vertical Line
+    doc.line(15, 35, 15, y);
+    doc.line(200, 35, 200, y);
+    doc.line(148, 35, 148, y);
+    doc.line(80, 35, 80, y);
+    doc.save(`neraca.pdf`);
+  };
+
+  const downloadExcel = () => {
+    const workSheet = XLSX.utils.json_to_sheet(hartaLancar);
+    const workSheet2 = XLSX.utils.json_to_sheet(hartaTetap);
+    const workSheet3 = XLSX.utils.json_to_sheet(kewajiban);
+    const workSheet4 = XLSX.utils.json_to_sheet(modalForDoc);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, `Harta Lancar`);
+    XLSX.utils.book_append_sheet(workBook, workSheet2, `Harta Tetap`);
+    XLSX.utils.book_append_sheet(workBook, workSheet3, `Kewajiban`);
+    XLSX.utils.book_append_sheet(workBook, workSheet4, `Modal`);
+    // Buffer
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+    // Binary String
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+    // Download
+    XLSX.writeFile(workBook, `Neraca.xlsx`);
   };
 
   if (loading) {
@@ -84,6 +247,24 @@ const Neraca = () => {
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Neraca
       </Typography>
+
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center"
+        }}
+      >
+        <ButtonGroup variant="text" color="secondary">
+          <Button startIcon={<DownloadIcon />} onClick={() => downloadPdf()}>
+            PDF
+          </Button>
+          <Button startIcon={<DownloadIcon />} onClick={() => downloadExcel()}>
+            EXCEL
+          </Button>
+        </ButtonGroup>
+      </Box>
 
       {users.map((user, index) => (
         <>

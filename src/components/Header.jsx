@@ -235,44 +235,12 @@ function Header() {
         >
           <Box sx={MenuStyle}>
             <Link
-              to="/dashboard"
+              to="/daftarJurnalUmum"
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <Typography>Dashboard</Typography>
+              <Typography>Jurnal Umum</Typography>
             </Link>
           </Box>
-          <Box sx={MenuStyle} onClick={openTransaksi}>
-            <Typography sx={{ color: transaksiMenu && "black" }}>
-              Transaksi
-            </Typography>
-          </Box>
-          {transaksiMenu && (
-            <Paper
-              sx={{
-                zIndex: 1,
-                display: "block",
-                position: "absolute",
-                top: screenSize >= 650 ? "7rem" : "9rem",
-                left: screenSize >= 650 ? "10rem" : "2rem"
-              }}
-            >
-              <List>
-                <Link
-                  to="/tambahTransaksi"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Tambah Transaksi"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-              </List>
-            </Paper>
-          )}
           <Box sx={MenuStyle} onClick={openMaster}>
             <Typography sx={{ color: masterMenu && "black" }}>
               Master Data
@@ -284,8 +252,8 @@ function Header() {
                 zIndex: 1,
                 display: "block",
                 position: "absolute",
-                top: screenSize >= 650 ? "7rem" : "12rem",
-                left: screenSize >= 650 ? "17rem" : "2rem"
+                top: screenSize >= 650 ? "7rem" : "9rem",
+                left: screenSize >= 650 ? "10rem" : "2rem"
               }}
             >
               <List>
@@ -316,20 +284,6 @@ function Header() {
                     </ListItemButton>
                   </ListItem>
                 </Link>
-                <Divider />
-                <Link
-                  to="/tutupBuku"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Tutup Buku"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
               </List>
             </Paper>
           )}
@@ -344,39 +298,11 @@ function Header() {
                 zIndex: 1,
                 display: "block",
                 position: "absolute",
-                top: screenSize >= 650 ? "7rem" : "14rem",
-                left: screenSize >= 650 ? "24rem" : "2rem"
+                top: screenSize >= 650 ? "7rem" : "12rem",
+                left: screenSize >= 650 ? "18rem" : "2rem"
               }}
             >
               <List>
-                <Link
-                  to="/transaksi"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Transaksi"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
-                <Link
-                  to="/daftarJurnalUmum"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Jurnal Umum"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
                 <Link
                   to="/bukuBesarGL"
                   style={{ textDecoration: "none", color: "inherit" }}
@@ -446,62 +372,6 @@ function Header() {
                     </ListItemButton>
                   </ListItem>
                 </Link>
-                <Divider />
-                <Link
-                  to="/periode"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Periode"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
-                <Link
-                  to="/arusKas"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Arus Kas"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
-                <Link
-                  to="/hutangPiutang"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Hutang Piutang"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
-                <Link
-                  to="/laporanKeuangan"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Laporan Keuangan"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
               </List>
             </Paper>
           )}
@@ -516,8 +386,8 @@ function Header() {
                 zIndex: 1,
                 display: "block",
                 position: "absolute",
-                top: screenSize >= 650 ? "7rem" : "17rem",
-                left: screenSize >= 650 ? "32rem" : "2rem"
+                top: screenSize >= 650 ? "7rem" : "14rem",
+                left: screenSize >= 650 ? "26rem" : "2rem"
               }}
             >
               <List>
@@ -529,20 +399,6 @@ function Header() {
                     <ListItemButton>
                       <ListItemText
                         primary="Profil"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-                <Divider />
-                <Link
-                  to="/resetData"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Reset Data"
                         sx={{ color: "#757575" }}
                       />
                     </ListItemButton>

@@ -51,8 +51,6 @@ export default function App() {
             }}
           >
             <Routes>
-              {/* <Route path="/dashboard" element={<KelompokBukuBesar />} /> */}
-              {/* <Route path="/tambahTransaksi" element={<KelompokBukuBesar />} /> */}
               {/* Master */}
               {/* Kelompok Buku Besar */}
               <Route

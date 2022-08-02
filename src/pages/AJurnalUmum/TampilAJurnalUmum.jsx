@@ -64,6 +64,7 @@ const TampilAJurnalUmum = () => {
       const newDebet = parseInt(jurnalUmum.totalDebet) - parseInt(debet);
       const newKredit = parseInt(jurnalUmum.totalKredit) - parseInt(kredit);
       let kelompokAccount = kodeAccount.slice(0, 3);
+      let tempTotalHarta;
 
       // Patch Jurnal Umum
       await axios.patch(`${tempUrl}/jurnalUmums/${jurnalUmum._id}`, {
@@ -127,7 +128,6 @@ const TampilAJurnalUmum = () => {
       ) {
         // Harta Lancar
         alert("Harta Lancar");
-        alert(tempHartaLancarOther);
         tempHartaLancarOther.data.push({
           kodeAccount,
           namaAccount,

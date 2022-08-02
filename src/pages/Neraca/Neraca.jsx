@@ -52,16 +52,16 @@ const Neraca = () => {
     setTotalHartaTetap(getHarta.data.totalHartaTetap);
     setTotalHarta(getHarta.data.totalHarta);
     // Get Harta Lancar
-    const getHartaLancar = await axios.get(`${tempUrl}/hartaLancarAll`);
+    const getHartaLancar = await axios.get(`${tempUrl}/hartaLancarAllForDoc`);
     setHartaLancar(getHartaLancar.data);
     // Get Harta Tetap
-    const getHartaTetap = await axios.get(`${tempUrl}/hartaTetapAll`);
+    const getHartaTetap = await axios.get(`${tempUrl}/hartaTetapAllForDoc`);
     setHartaTetap(getHartaTetap.data);
     // Get Kewajiban
     const getKewajiban = await axios.get(`${tempUrl}/kewajibanLast`);
     setTotalKewajiban(getKewajiban.data[0].totalKewajiban);
     // Get Kewajiban All
-    const getKewajibanAll = await axios.get(`${tempUrl}/kewajibanAll`);
+    const getKewajibanAll = await axios.get(`${tempUrl}/kewajibanAllForDoc`);
     setKewajiban(getKewajibanAll.data);
     // Get Modal
     const getModal = await axios.get(`${tempUrl}/perubahanModalLast`);

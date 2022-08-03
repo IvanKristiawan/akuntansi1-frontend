@@ -73,7 +73,7 @@ const NeracaSaldo = () => {
   }
 
   return (
-    <Box sx={{ pt: 5 }}>
+    <Box sx={{ p: 2, pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Neraca Saldo

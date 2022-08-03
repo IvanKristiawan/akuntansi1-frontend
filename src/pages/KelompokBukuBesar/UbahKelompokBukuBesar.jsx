@@ -50,7 +50,7 @@ const UbahKelompokBukuBesar = () => {
   }
 
   return (
-    <Box sx={{ pt: 10 }}>
+    <Box sx={{ p: 2, pt: 10 }}>
       <Typography color="#757575">Master</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Ubah Kelompok Buku Besar

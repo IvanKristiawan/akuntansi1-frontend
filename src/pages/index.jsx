@@ -25,3 +25,7 @@ export { default as LabaRugi } from "./LabaRugi/LabaRugi";
 export { default as PerubahanModal } from "./PerubahanModal/PerubahanModal";
 // Neraca
 export { default as Neraca } from "./Neraca/Neraca";
+// Login
+export { default as Login } from "./Login/Login";
+// Register
+export { default as Register } from "./Register/Register";

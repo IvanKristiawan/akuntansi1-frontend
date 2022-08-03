@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./styles.css";
+import { AuthContext } from "./contexts/AuthContext";
 import { Paper, Box } from "@mui/material";
 import { Header, Footer } from "./components/index";
 import { useStateContext } from "./contexts/ContextProvider";
@@ -21,11 +22,23 @@ import {
   NeracaSaldo,
   LabaRugi,
   PerubahanModal,
-  Neraca
+  Neraca,
+  Login,
+  Register
 } from "./pages";
 
 export default function App() {
   const { screenSize, setScreenSize } = useStateContext();
+
+  const ProtectedRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user && user.isAdmin) {
+      return children;
+    }
+
+    return <Navigate to="/login" />;
+  };
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -36,9 +49,17 @@ export default function App() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   return (
     <div className="App">
-      <Box sx={{ backgroundColor: "#e0e0e0" }}>
+      <Box
+        sx={{
+          backgroundColor: "#e0e0e0",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column"
+        }}
+      >
         <BrowserRouter>
           <Header />
           <Paper
@@ -46,12 +67,12 @@ export default function App() {
             sx={{
               margin: screenSize >= 1000 ? 5 : 1,
               mb: 0,
-              padding: 2,
               backgroundColor: "#fafafa"
             }}
           >
             <Routes>
-              {/* Master */}
+              {/* Main */}
+              <Route path="/" element={<TampilDaftarJurnalUmum />} />
               {/* Kelompok Buku Besar */}
               <Route
                 path="/kelompokBukuBesar"
@@ -63,17 +84,39 @@ export default function App() {
               />
               <Route
                 path="/kelompokBukuBesar/:id/edit"
-                element={<UbahKelompokBukuBesar />}
+                element={
+                  <ProtectedRoute>
+                    <UbahKelompokBukuBesar />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="/kelompokBukuBesar/tambah"
-                element={<TambahKelompokBukuBesar />}
+                element={
+                  <ProtectedRoute>
+                    <TambahKelompokBukuBesar />
+                  </ProtectedRoute>
+                }
               />
               {/* Buku Besar */}
               <Route path="/bukuBesar" element={<BukuBesar />} />
               <Route path="/bukuBesar/:id" element={<BukuBesar />} />
-              <Route path="/bukuBesar/:id/edit" element={<UbahBukuBesar />} />
-              <Route path="/bukuBesar/tambah" element={<TambahBukuBesar />} />
+              <Route
+                path="/bukuBesar/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <UbahBukuBesar />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/bukuBesar/tambah"
+                element={
+                  <ProtectedRoute>
+                    <TambahBukuBesar />
+                  </ProtectedRoute>
+                }
+              />
               {/* Jurnal Umum */}
               <Route
                 path="/daftarJurnalUmum"
@@ -81,7 +124,11 @@ export default function App() {
               />
               <Route
                 path="/daftarJurnalUmum/jurnalUmum/tambah"
-                element={<TambahJurnalUmum />}
+                element={
+                  <ProtectedRoute>
+                    <TambahJurnalUmum />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="/daftarJurnalUmum/jurnalUmum/:id/:noJU"
@@ -89,12 +136,20 @@ export default function App() {
               />
               <Route
                 path="/daftarJurnalUmum/jurnalUmum/:id/edit"
-                element={<UbahJurnalUmum />}
+                element={
+                  <ProtectedRoute>
+                    <UbahJurnalUmum />
+                  </ProtectedRoute>
+                }
               />
               {/* A Jurnal Umum */}
               <Route
                 path="/daftarJurnalUmum/jurnalUmum/:id/tambahAJurnalUmum"
-                element={<TambahAJurnalUmum />}
+                element={
+                  <ProtectedRoute>
+                    <TambahAJurnalUmum />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="/daftarJurnalUmum/jurnalUmum/:id/:noJU/:idAJurnalUmum"
@@ -113,8 +168,16 @@ export default function App() {
               {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
             </Routes>
           </Paper>
-          <Footer />
+          <Routes>
+            {/* Login */}
+            <Route path="/login" element={<Login />} />
+            {/* Register */}
+            <Route path="/register" element={<Register />} />
+          </Routes>
         </BrowserRouter>
+        <Box sx={{ mt: "auto" }}>
+          <Footer />
+        </Box>
       </Box>
     </div>
   );

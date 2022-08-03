@@ -3,7 +3,7 @@ import { Box, LinearProgress, Typography, Skeleton } from "@mui/material";
 
 const Loader = () => {
   return (
-    <Box>
+    <Box sx={{ p: 2 }}>
       <Skeleton variant="h1" />
       <Box sx={{ marginTop: 2, display: "flex" }}>
         <Skeleton variant="h1" width={100} sx={{ marginRight: 1 }} />

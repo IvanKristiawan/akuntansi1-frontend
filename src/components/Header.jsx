@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Paper,
   Avatar,
@@ -9,9 +9,11 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  ButtonGroup,
+  Button
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -19,10 +21,12 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
+import { AuthContext } from "../contexts/AuthContext";
 import "./font.css";
 
 function Header() {
   const location = useLocation();
+  const { user, dispatch } = useContext(AuthContext);
   const [menu, setMenu] = useState(false);
   const [profil, setProfil] = useState(false);
   const [transaksiMenu, setTransaksiMenu] = useState(false);
@@ -30,10 +34,26 @@ function Header() {
   const [laporanMenu, setLaporanMenu] = useState(false);
   const [pengaturanMenu, setPengaturanMenu] = useState(false);
   const { screenSize } = useStateContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     closeAllMenu();
+    openMenu();
   }, [location]);
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
+  };
 
   const closeAllMenu = () => {
     setProfil(false);
@@ -50,14 +70,6 @@ function Header() {
   const openProfile = () => {
     setProfil(!profil);
     setTransaksiMenu(false);
-    setMasterMenu(false);
-    setLaporanMenu(false);
-    setPengaturanMenu(false);
-  };
-
-  const openTransaksi = () => {
-    setProfil(false);
-    setTransaksiMenu(!transaksiMenu);
     setMasterMenu(false);
     setLaporanMenu(false);
     setPengaturanMenu(false);
@@ -137,63 +149,60 @@ function Header() {
           </Typography>
         </Box>
         {screenSize >= 650 ? (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 1,
-                borderRadius: 2,
-                cursor: "pointer",
-                "&:hover": { backgroundColor: "#f5f5f5" }
-              }}
-              onClick={openProfile}
-            >
-              <Avatar
-                alt="Company Profile"
-                src="https://res.cloudinary.com/dbtag5lau/image/upload/v1650168835/jj5aoh7yg4w1yerrg1qn.jpg"
-                sx={{ width: 30, height: 30 }}
-              />
-              <Typography sx={{ color: "#757575", ml: 1 }}>
-                Ivan Kristiawan
-              </Typography>
-              <ArrowDropDownIcon />
-            </Box>
-            {profil && (
-              <Paper
+          user ? (
+            <>
+              <Box
                 sx={{
-                  zIndex: 1,
-                  display: "block",
-                  position: "absolute",
-                  top: "3rem",
-                  right: "4rem"
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 1,
+                  borderRadius: 2,
+                  cursor: "pointer",
+                  "&:hover": { backgroundColor: "#f5f5f5" }
                 }}
+                onClick={openProfile}
               >
-                <List>
-                  <Link
-                    to="/profil"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
+                <Avatar
+                  alt="Company Profile"
+                  src="https://res.cloudinary.com/dbtag5lau/image/upload/v1650168835/jj5aoh7yg4w1yerrg1qn.jpg"
+                  sx={{ width: 30, height: 30 }}
+                />
+                <Typography sx={{ color: "#757575", ml: 1 }}>
+                  {user.username} {user.isAdmin ? "(Admin)" : "(User)"}
+                </Typography>
+                <ArrowDropDownIcon />
+              </Box>
+              {profil && (
+                <Paper
+                  sx={{
+                    zIndex: 1,
+                    display: "block",
+                    position: "absolute",
+                    top: "3rem",
+                    right: "4rem"
+                  }}
+                >
+                  <List>
+                    <Link
+                      to="/profil"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <ListItem disablePadding>
+                        <ListItemButton>
+                          <ListItemIcon>
+                            <PersonOutlineIcon />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary="Profil"
+                            sx={{ color: "#757575" }}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    </Link>
+                    <Divider sx={{ backgroundColor: "#fafafa" }} />
                     <ListItem disablePadding>
-                      <ListItemButton>
-                        <ListItemIcon>
-                          <PersonOutlineIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Profil"
-                          sx={{ color: "#757575" }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  </Link>
-                  <Divider sx={{ backgroundColor: "#fafafa" }} />
-                  <Link
-                    to="/logout"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <ListItem disablePadding>
-                      <ListItemButton>
+                      <ListItemButton onClick={handleClick}>
                         <ListItemIcon>
                           <LogoutIcon />
                         </ListItemIcon>
@@ -203,11 +212,29 @@ function Header() {
                         />
                       </ListItemButton>
                     </ListItem>
-                  </Link>
-                </List>
-              </Paper>
-            )}{" "}
-          </>
+                  </List>
+                </Paper>
+              )}{" "}
+            </>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 1,
+                  borderRadius: 2,
+                  cursor: "pointer"
+                }}
+              >
+                <ButtonGroup variant="text" aria-label="text button group">
+                  <Button onClick={handleRegister}>Register</Button>
+                  <Button onClick={handleLogin}>Login</Button>
+                </ButtonGroup>
+              </Box>
+            </>
+          )
         ) : (
           <IconButton
             size="large"
@@ -380,6 +407,26 @@ function Header() {
               Pengaturan
             </Typography>
           </Box>
+          {screenSize <= 650 && (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 1,
+                  borderRadius: 2,
+                  cursor: "pointer",
+                  m: "auto"
+                }}
+              >
+                <ButtonGroup variant="text" aria-label="text button group">
+                  <Button onClick={handleRegister}>Register</Button>
+                  <Button onClick={handleLogin}>Login</Button>
+                </ButtonGroup>
+              </Box>
+            </>
+          )}
           {pengaturanMenu && (
             <Paper
               sx={{
@@ -405,19 +452,11 @@ function Header() {
                   </ListItem>
                 </Link>
                 <Divider />
-                <Link
-                  to="/logout"
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary="Log out"
-                        sx={{ color: "#757575" }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleClick}>
+                    <ListItemText primary="Log out" sx={{ color: "#757575" }} />
+                  </ListItemButton>
+                </ListItem>
               </List>
             </Paper>
           )}

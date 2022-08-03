@@ -94,7 +94,7 @@ const KelompokBukuBesar = () => {
   }
 
   return (
-    <Box sx={{ pt: 5 }}>
+    <Box sx={{ p: 2, pt: 5 }}>
       <Typography color="#757575">Master</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Kelompok Buku Besar

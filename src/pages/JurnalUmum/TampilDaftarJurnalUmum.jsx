@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Box, Typography, Divider, Pagination } from "@mui/material";
 import { ShowTableDaftarJurnalUmum } from "../../components/ShowTable";
@@ -10,8 +10,10 @@ import {
 } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const TampilDaftarJurnalUmum = () => {
+  const { user } = useContext(AuthContext);
   const { screenSize } = useStateContext();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUser] = useState([]);
@@ -60,7 +62,7 @@ const TampilDaftarJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 5 }}>
+    <Box sx={{ p: 2, pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Daftar Jurnal Umum
@@ -79,6 +81,7 @@ const TampilDaftarJurnalUmum = () => {
           addLink={`/daftarJurnalUmum/jurnalUmum/tambah`}
           editLink={`/`}
           deleteUser={"/"}
+          user={user}
         />
       </Box>
       <Divider sx={{ pt: 4 }} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import {
@@ -13,12 +13,14 @@ import { ShowTableJurnalUmum } from "../../components/ShowTable";
 import { Loader, ButtonModifierForJurnalUmum } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
+import { AuthContext } from "../../contexts/AuthContext";
 import DownloadIcon from "@mui/icons-material/Download";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 
 const TampilJurnalUmum = () => {
+  const { user } = useContext(AuthContext);
   const location = useLocation();
   const id = location.pathname.split("/")[3];
   const { noJU } = useParams();
@@ -123,7 +125,7 @@ const TampilJurnalUmum = () => {
   }
 
   return (
-    <Box sx={{ pt: 5 }}>
+    <Box sx={{ p: 2, pt: 5 }}>
       <Typography color="#757575">Laporan</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
         Jurnal Umum
@@ -143,6 +145,7 @@ const TampilJurnalUmum = () => {
           editLink={`/daftarJurnalUmum/jurnalUmum/${id}/edit`}
           deleteUser={deleteUser}
           aJurnalUmums={aJurnalUmums}
+          user={user}
         />
       </Box>
       <Box

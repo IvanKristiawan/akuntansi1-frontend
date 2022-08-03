@@ -19,10 +19,20 @@ const ButtonModifierForJurnalUmum = ({
   addLink,
   editLink,
   deleteUser,
-  aJurnalUmums
+  aJurnalUmums,
+  user
 }) => {
   let navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [openUser, setOpenUser] = React.useState(false);
+
+  const handleClickOpenUser = () => {
+    setOpenUser(true);
+  };
+
+  const handleCloseUser = () => {
+    setOpenUser(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -34,18 +44,32 @@ const ButtonModifierForJurnalUmum = ({
   return (
     <>
       <ButtonGroup variant="contained">
-        <Button
-          color="success"
-          sx={{ bgcolor: "success.light", textTransform: "none" }}
-          startIcon={<AddCircleOutlineIcon />}
-          size="small"
-          onClick={() => {
-            navigate(addLink);
-          }}
-        >
-          Tambah
-        </Button>
-        {kode && (
+        {user && user.isAdmin ? (
+          <Button
+            color="success"
+            sx={{ bgcolor: "success.light", textTransform: "none" }}
+            startIcon={<AddCircleOutlineIcon />}
+            size="small"
+            onClick={() => {
+              navigate(addLink);
+            }}
+          >
+            Tambah
+          </Button>
+        ) : (
+          <>
+            <Button
+              color="success"
+              sx={{ bgcolor: "success.light", textTransform: "none" }}
+              startIcon={<AddCircleOutlineIcon />}
+              size="small"
+              onClick={handleClickOpenUser}
+            >
+              Tambah
+            </Button>
+          </>
+        )}
+        {kode && user && user.isAdmin ? (
           <>
             <Button
               color="primary"
@@ -77,6 +101,36 @@ const ButtonModifierForJurnalUmum = ({
               </Button>
             )}
           </>
+        ) : (
+          <>
+            <Button
+              color="primary"
+              startIcon={<EditIcon />}
+              sx={{ textTransform: "none" }}
+              onClick={handleClickOpenUser}
+            >
+              Ubah
+            </Button>
+            {aJurnalUmums.length === 0 ? (
+              <Button
+                color="error"
+                startIcon={<DeleteOutlineIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={() => deleteUser(id)}
+              >
+                Hapus
+              </Button>
+            ) : (
+              <Button
+                color="error"
+                startIcon={<DeleteOutlineIcon />}
+                sx={{ textTransform: "none" }}
+                onClick={handleClickOpenUser}
+              >
+                Hapus
+              </Button>
+            )}
+          </>
         )}
       </ButtonGroup>
       <Dialog
@@ -95,6 +149,24 @@ const ButtonModifierForJurnalUmum = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openUser}
+        onClose={handleCloseUser}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Ingin mengubah data?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Hanya Admin yang dapat mengubah data
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUser}>Ok</Button>
         </DialogActions>
       </Dialog>
     </>

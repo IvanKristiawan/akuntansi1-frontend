@@ -67,6 +67,7 @@ const TambahAJurnalUmum = () => {
       let namaAccount = account.split("-")[1];
       let kelompokAccount = kodeAccount.slice(0, 3);
       let tempTotalHarta;
+      let tempLabaRugiTransaksiTotal;
 
       // Error Handling Debet & Kredit
       if (isNaN(parseInt(debet))) {
@@ -281,13 +282,18 @@ const TambahAJurnalUmum = () => {
           ) {
             // Biaya
             alert("Masuk Biaya");
+            if (!tempLabaRugiTransaksi.data.total) {
+              tempLabaRugiTransaksiTotal = 0;
+            } else {
+              tempLabaRugiTransaksiTotal = tempLabaRugiTransaksi.data[0].total;
+            }
             tempLabaRugiTransaksiOther.data.push({
               idNeracaSaldo: tempIdNeracaSaldo.data._id,
               kodeAccount,
               namaAccount,
               kelompokAccount: kodeAccount.slice(0, 3),
               total:
-                tempLabaRugiTransaksi.data[0].total +
+                tempLabaRugiTransaksiTotal +
                 (parseInt(debet) - parseInt(kredit))
             });
             alert(tempLabaRugiTransaksiOther);

@@ -7,8 +7,14 @@ import { Box, Typography, TextField, Button, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useStateContext } from "../../contexts/ContextProvider";
+import { useForm } from "react-hook-form";
 
 const UbahProfil = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
   const { user, dispatch } = useContext(AuthContext);
   const { screenSize } = useStateContext();
   const [username, setUsername] = useState("");
@@ -62,83 +68,88 @@ const UbahProfil = () => {
         Ubah Profil
       </Typography>
       <Divider sx={{ mt: 2 }} />
-      <Box
-        sx={{
-          mt: 4,
-          display: "flex",
-          flexDirection: {
-            xs: "column",
-            sm: "row"
-          }
-        }}
-      >
+      <form onSubmit={handleSubmit(updateUser)}>
         <Box
           sx={{
+            mt: 4,
             display: "flex",
-            flex: 1,
-            flexDirection: "column",
-            mr: {
-              xs: 0,
-              sm: 10
+            flexDirection: {
+              xs: "column",
+              sm: "row"
             }
           }}
         >
-          <Box>
-            <Typography sx={{ margin: 1, fontWeight: "500" }}>
-              Username
-            </Typography>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              value={username}
-              sx={{
-                display: "flex",
-                width: screenSize >= 650 ? "30rem" : "100%"
-              }}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Box>
-          <Box>
-            <Typography sx={{ margin: 1, fontWeight: "500" }}>Email</Typography>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              value={email}
-              sx={{
-                display: "flex",
-                width: screenSize >= 650 ? "30rem" : "100%"
-              }}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Box>
-          <Box>
-            <Typography sx={{ margin: 1, fontWeight: "500" }}>
-              Password
-            </Typography>
-            <TextField
-              variant="outlined"
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={{
-                display: "flex",
-                width: screenSize >= 650 ? "30rem" : "100%"
-              }}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              flex: 1,
+              flexDirection: "column",
+              mr: {
+                xs: 0,
+                sm: 10
+              }
+            }}
+          >
+            <Box>
+              <Typography sx={{ margin: 1, fontWeight: "500" }}>
+                Username
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                value={username}
+                sx={{
+                  display: "flex",
+                  width: screenSize >= 650 ? "30rem" : "100%"
+                }}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Box>
+            <Box>
+              <Typography sx={{ margin: 1, fontWeight: "500" }}>
+                Email
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                value={email}
+                sx={{
+                  display: "flex",
+                  width: screenSize >= 650 ? "30rem" : "100%"
+                }}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Box>
+            <Box>
+              <Typography sx={{ margin: 1, fontWeight: "500" }}>
+                Password
+              </Typography>
+              <TextField
+                variant="outlined"
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                {...register("password", {
+                  required: "Password harus diisi!"
+                })}
+                error={!!errors?.password}
+                helperText={errors?.password ? errors.password.message : null}
+                onChange={(e) => setPassword(e.target.value)}
+                sx={{
+                  display: "flex",
+                  width: screenSize >= 650 ? "30rem" : "100%"
+                }}
+              />
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ mt: 4 }}>
-        <Button
-          variant="contained"
-          startIcon={<EditIcon />}
-          onClick={updateUser}
-        >
-          Ubah
-        </Button>
-      </Box>
+        <Box sx={{ mt: 4 }}>
+          <Button type="submit" variant="contained" startIcon={<EditIcon />}>
+            Ubah
+          </Button>
+        </Box>
+      </form>
       <Divider sx={{ mt: 2 }} />
     </Box>
   );

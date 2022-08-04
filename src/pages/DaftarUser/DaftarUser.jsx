@@ -2,25 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box, TextField, Typography, Divider, Pagination } from "@mui/material";
-import { ShowTableKelompokBukuBesar } from "../../components/ShowTable";
-import {
-  SearchBar,
-  Loader,
-  usePagination,
-  ButtonModifier
-} from "../../components";
+import { ShowTableDaftarUser } from "../../components/ShowTable";
+import { SearchBar, Loader, usePagination } from "../../components";
+import ButtonModifierForDaftarUser from "./components/ButtonModifierForDaftarUser";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const KelompokBukuBesar = () => {
+const DaftarUser = () => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const { screenSize } = useStateContext();
-  const [kode, setKode] = useState("");
-  const [nama, setNama] = useState("");
-  const [jenis, setJenis] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [isAdmin, setIsAdmin] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUser] = useState([]);
   const navigate = useNavigate();
@@ -36,9 +32,8 @@ const KelompokBukuBesar = () => {
     if (searchTerm === "") {
       return val;
     } else if (
-      val.kode.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.nama.toUpperCase().includes(searchTerm.toUpperCase()) ||
-      val.jenis.toUpperCase().includes(searchTerm.toUpperCase())
+      val.username.toUpperCase().includes(searchTerm.toUpperCase()) ||
+      val.email.toUpperCase().includes(searchTerm.toUpperCase())
     ) {
       return val;
     }
@@ -62,30 +57,29 @@ const KelompokBukuBesar = () => {
 
   const getUsers = async () => {
     setLoading(true);
-    const response = await axios.get(`${tempUrl}/kelompokBukuBesars`);
+    const response = await axios.get(`${tempUrl}/users`);
     setUser(response.data);
     setLoading(false);
   };
 
   const getUserById = async () => {
     if (id) {
-      const response = await axios.get(`${tempUrl}/kelompokBukuBesars/${id}`);
-      setKode(response.data.kode);
-      setNama(response.data.nama);
-      setJenis(response.data.jenis);
+      const response = await axios.get(`${tempUrl}/users/${id}`);
+      setUsername(response.data.username);
+      setEmail(response.data.email);
+      response.data.isAdmin ? setIsAdmin("Admin") : setIsAdmin("User");
     }
   };
 
   const deleteUser = async (id) => {
     try {
       setLoading(true);
-      await axios.delete(`${tempUrl}/kelompokBukuBesars/${id}`);
+      await axios.delete(`${tempUrl}/users/${id}`);
       getUsers();
-      setKode("");
-      setNama("");
-      setJenis("");
+      setUsername("");
+      setEmail("");
       setLoading(false);
-      navigate("/kelompokBukuBesar");
+      navigate("/daftarUser");
     } catch (error) {
       console.log(error);
     }
@@ -97,9 +91,9 @@ const KelompokBukuBesar = () => {
 
   return (
     <Box sx={{ p: 2, pt: 5 }}>
-      <Typography color="#757575">Master</Typography>
+      <Typography color="#757575">Akun</Typography>
       <Typography variant="h4" sx={{ fontWeight: "900" }}>
-        Kelompok Buku Besar
+        Daftar User
       </Typography>
       <Box
         sx={{
@@ -109,11 +103,11 @@ const KelompokBukuBesar = () => {
           justifyContent: "center"
         }}
       >
-        <ButtonModifier
+        <ButtonModifierForDaftarUser
           id={id}
-          kode={kode}
-          addLink={`/kelompokBukuBesar/tambah`}
-          editLink={`/kelompokBukuBesar/${id}/edit`}
+          kode={"daftarUser"}
+          addLink={`/`}
+          editLink={`/daftarUser/${id}/edit`}
           deleteUser={deleteUser}
           user={user}
         />
@@ -140,23 +134,8 @@ const KelompokBukuBesar = () => {
           }}
         >
           <Box>
-            <Typography sx={{ margin: 1, fontWeight: "500" }}>Kode</Typography>
-            <TextField
-              id="outlined-basic"
-              variant="filled"
-              sx={{
-                display: "flex",
-                width: screenSize >= 650 ? "30rem" : "100%"
-              }}
-              InputProps={{
-                readOnly: true
-              }}
-              value={kode}
-            />
-          </Box>
-          <Box sx={{ marginTop: 2 }}>
             <Typography sx={{ margin: 1, fontWeight: "500" }}>
-              Nama Kelompok
+              Username
             </Typography>
             <TextField
               id="outlined-basic"
@@ -168,12 +147,27 @@ const KelompokBukuBesar = () => {
               InputProps={{
                 readOnly: true
               }}
-              value={nama}
+              value={username}
+            />
+          </Box>
+          <Box sx={{ marginTop: 2 }}>
+            <Typography sx={{ margin: 1, fontWeight: "500" }}>Email</Typography>
+            <TextField
+              id="outlined-basic"
+              variant="filled"
+              sx={{
+                display: "flex",
+                width: screenSize >= 650 ? "30rem" : "100%"
+              }}
+              InputProps={{
+                readOnly: true
+              }}
+              value={email}
             />
           </Box>
           <Box sx={{ marginTop: 2 }}>
             <Typography sx={{ margin: 1, fontWeight: "500" }}>
-              Jenis Account
+              Status
             </Typography>
             <TextField
               id="outlined-basic"
@@ -185,7 +179,7 @@ const KelompokBukuBesar = () => {
               InputProps={{
                 readOnly: true
               }}
-              value={jenis}
+              value={isAdmin}
             />
           </Box>
         </Box>
@@ -195,7 +189,7 @@ const KelompokBukuBesar = () => {
         <SearchBar setSearchTerm={setSearchTerm} />
       </Box>
       <Box sx={{ pt: 4, display: "flex", justifyContent: "center" }}>
-        <ShowTableKelompokBukuBesar
+        <ShowTableDaftarUser
           currentPosts={currentPosts}
           searchTerm={searchTerm}
         />
@@ -213,4 +207,4 @@ const KelompokBukuBesar = () => {
   );
 };
 
-export default KelompokBukuBesar;
+export default DaftarUser;

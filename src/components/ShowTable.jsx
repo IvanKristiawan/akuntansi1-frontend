@@ -727,3 +727,119 @@ export function ShowNeraca({ kode, nama, total }) {
     </>
   );
 }
+
+export function ShowTableDaftarUser({ currentPosts, searchTerm }) {
+  const { screenSize } = useStateContext();
+  let navigate = useNavigate();
+  return screenSize >= 600 ? (
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold" }}>Username</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
+            {screenSize >= 600 && (
+              <TableCell sx={{ fontWeight: "bold" }}>Admin</TableCell>
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentPosts
+            .filter((val) => {
+              if (searchTerm === "") {
+                return val;
+              } else if (
+                val.username.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                val.email.toUpperCase().includes(searchTerm.toUpperCase())
+              ) {
+                return val;
+              }
+            })
+            .map((user, index) => (
+              <TableRow
+                key={user._id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { bgcolor: "#eeeeee" },
+                  cursor: "pointer"
+                }}
+                onClick={() => {
+                  navigate(`/daftarUser/${user._id}`);
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {user.username}
+                </TableCell>
+                <TableCell>{user.email}</TableCell>
+                {user.isAdmin ? (
+                  <TableCell>Admin</TableCell>
+                ) : (
+                  <TableCell>User</TableCell>
+                )}
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      {currentPosts
+        .filter((val) => {
+          if (searchTerm === "") {
+            return val;
+          } else if (
+            val.username.toUpperCase().includes(searchTerm.toUpperCase()) ||
+            val.email.toUpperCase().includes(searchTerm.toUpperCase())
+          ) {
+            return val;
+          }
+        })
+        .map((user, index) => (
+          <Card
+            elevation={3}
+            sx={{ width: "100%", backgroundColor: "#f5f5f5", mb: 3 }}
+          >
+            <CardActionArea>
+              <CardContent
+                onClick={() => {
+                  navigate(`/daftarUser/${user._id}`);
+                }}
+              >
+                {user.isAdmin ? (
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Admin
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    User
+                  </Typography>
+                )}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: 1
+                  }}
+                >
+                  <Typography variant="body2" component="div">
+                    {user.username}
+                  </Typography>
+                  <Typography variant="body2" component="div">
+                    {user.email}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
+    </Box>
+  );
+}

@@ -24,7 +24,11 @@ import {
   PerubahanModal,
   Neraca,
   Login,
-  Register
+  Register,
+  Profil,
+  UbahProfil,
+  DaftarUser,
+  UbahDaftarUser
 } from "./pages";
 
 export default function App() {
@@ -34,6 +38,16 @@ export default function App() {
     const { user } = useContext(AuthContext);
 
     if (user && user.isAdmin) {
+      return children;
+    }
+
+    return <Navigate to="/login" />;
+  };
+
+  const ProtectedRouteUser = ({ children }) => {
+    const { user } = useContext(AuthContext);
+
+    if (user) {
       return children;
     }
 
@@ -165,7 +179,48 @@ export default function App() {
               <Route path="/perubahanModal" element={<PerubahanModal />} />
               {/* Neraca */}
               <Route path="/neraca" element={<Neraca />} />
-              {/* <Route path="/bukuBesar" element={<KelompokBukuBesar />} /> */}
+              {/* Profil */}
+              <Route
+                path="/profil"
+                element={
+                  <ProtectedRouteUser>
+                    <Profil />
+                  </ProtectedRouteUser>
+                }
+              />
+              <Route
+                path="/profil/:id/edit"
+                element={
+                  <ProtectedRouteUser>
+                    <UbahProfil />
+                  </ProtectedRouteUser>
+                }
+              />
+              {/* Daftar User */}
+              <Route
+                path="/daftarUser"
+                element={
+                  <ProtectedRoute>
+                    <DaftarUser />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/daftarUser/:id"
+                element={
+                  <ProtectedRoute>
+                    <DaftarUser />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/daftarUser/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <UbahDaftarUser />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </Paper>
           <Routes>

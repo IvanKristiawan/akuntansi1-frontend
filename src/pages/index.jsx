@@ -29,3 +29,9 @@ export { default as Neraca } from "./Neraca/Neraca";
 export { default as Login } from "./Login/Login";
 // Register
 export { default as Register } from "./Register/Register";
+// Profil
+export { default as Profil } from "./Profil/Profil";
+export { default as UbahProfil } from "./Profil/UbahProfil";
+// Daftar User
+export { default as DaftarUser } from "./DaftarUser/DaftarUser";
+export { default as UbahDaftarUser } from "./DaftarUser/UbahDaftarUser";

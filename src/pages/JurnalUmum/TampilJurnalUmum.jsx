@@ -10,7 +10,8 @@ import {
   ButtonGroup
 } from "@mui/material";
 import { ShowTableJurnalUmum } from "../../components/ShowTable";
-import { Loader, ButtonModifierForJurnalUmum } from "../../components";
+import { Loader } from "../../components";
+import ButtonModifierForJurnalUmum from "./components/ButtonModifierForJurnalUmum";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { AuthContext } from "../../contexts/AuthContext";

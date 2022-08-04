@@ -12,9 +12,18 @@ import {
   TextField,
   Snackbar
 } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const Register = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
   const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [credentials, setCredentials] = useState({
     username: undefined,
     email: undefined,
@@ -25,10 +34,6 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  };
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -37,12 +42,19 @@ const Register = () => {
   };
 
   const handleClick = async (e) => {
-    e.preventDefault();
     dispatch({ type: "REGISTER_START" });
     try {
-      const res = await axios.post(`${tempUrl}/auth/register`, credentials);
+      const res = await axios.post(`${tempUrl}/auth/register`, {
+        username,
+        email,
+        password
+      });
       dispatch({ type: "REGISTER_SUCCESS", payload: res.data.details });
-      const res2 = await axios.post(`${tempUrl}/auth/login`, credentials);
+      const res2 = await axios.post(`${tempUrl}/auth/login`, {
+        username,
+        email,
+        password
+      });
       dispatch({ type: "LOGIN_SUCCESS", payload: res2.data.details });
       navigate("/");
     } catch (err) {
@@ -52,56 +64,85 @@ const Register = () => {
   };
 
   return (
-    <Paper
-      elevation={3}
+    <Box
       sx={{
-        width: "300px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        p: 3,
         m: "auto"
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Typography variant="h5">Register</Typography>
-      </Box>
-      <TextField
-        id="username"
-        label="Username"
-        onChange={handleChange}
-        sx={{ mt: 2 }}
-      />
-      <TextField
-        id="email"
-        label="Email"
-        onChange={handleChange}
-        sx={{ mt: 2 }}
-      />
-      <TextField
-        id="password"
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-        onChange={handleChange}
-        sx={{ mt: 2 }}
-      />
-      <Button
-        disabled={loading}
-        onClick={handleClick}
-        variant="contained"
-        sx={{ mt: 2 }}
-      >
-        Login
-      </Button>
-      {error && (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-            {error.message}
-          </Alert>
-        </Snackbar>
-      )}
-    </Paper>
+      <form onSubmit={handleSubmit(handleClick)}>
+        <Paper
+          elevation={3}
+          sx={{
+            width: "300px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 3
+          }}
+        >
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Typography variant="h5">Register</Typography>
+          </Box>
+          <TextField
+            id="username"
+            label="Username"
+            value={username}
+            {...register("username", {
+              required: "Username harus diisi!"
+            })}
+            error={!!errors?.username}
+            helperText={errors?.username ? errors.username.message : null}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            id="email"
+            label="Email"
+            value={email}
+            {...register("email", {
+              required: "Email harus diisi!"
+            })}
+            error={!!errors?.email}
+            helperText={errors?.email ? errors.email.message : null}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            id="password"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            {...register("password", {
+              required: "Password harus diisi!"
+            })}
+            error={!!errors?.password}
+            helperText={errors?.password ? errors.password.message : null}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+          <Button
+            type="submit"
+            disabled={loading}
+            variant="contained"
+            sx={{ mt: 2 }}
+          >
+            Login
+          </Button>
+          {error && (
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert
+                onClose={handleClose}
+                severity="error"
+                sx={{ width: "100%" }}
+              >
+                {error.message}
+              </Alert>
+            </Snackbar>
+          )}
+        </Paper>
+      </form>
+    </Box>
   );
 };
 

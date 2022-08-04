@@ -11,7 +11,8 @@ import {
   ListItemText,
   ListItemIcon,
   ButtonGroup,
-  Button
+  Button,
+  Chip
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -163,13 +164,9 @@ function Header() {
                 }}
                 onClick={openProfile}
               >
-                <Avatar
-                  alt="Company Profile"
-                  src="https://res.cloudinary.com/dbtag5lau/image/upload/v1650168835/jj5aoh7yg4w1yerrg1qn.jpg"
-                  sx={{ width: 30, height: 30 }}
-                />
+                <Chip label={user.isAdmin ? "Admin" : "User"} />
                 <Typography sx={{ color: "#757575", ml: 1 }}>
-                  {user.username} {user.isAdmin ? "(Admin)" : "(User)"}
+                  {user.username}
                 </Typography>
                 <ArrowDropDownIcon />
               </Box>
@@ -446,6 +443,19 @@ function Header() {
                     <ListItemButton>
                       <ListItemText
                         primary="Profil"
+                        sx={{ color: "#757575" }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
+                <Link
+                  to="/daftarUser"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemText
+                        primary="Daftar User"
                         sx={{ color: "#757575" }}
                       />
                     </ListItemButton>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box, TextField, Typography, Divider, Pagination } from "@mui/material";
@@ -11,8 +11,10 @@ import {
 } from "../../components";
 import { tempUrl } from "../../contexts/ContextProvider";
 import { useStateContext } from "../../contexts/ContextProvider";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const BukuBesar = () => {
+  const { user } = useContext(AuthContext);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const { screenSize } = useStateContext();
@@ -127,6 +129,7 @@ const BukuBesar = () => {
           addLink={`/bukuBesar/tambah`}
           editLink={`/bukuBesar/${id}/edit`}
           deleteUser={deleteUser}
+          user={user}
         />
       </Box>
       <Divider sx={{ pt: 4 }} />

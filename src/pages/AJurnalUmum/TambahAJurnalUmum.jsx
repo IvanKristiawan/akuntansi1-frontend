@@ -116,7 +116,7 @@ const TambahAJurnalUmum = () => {
       // Patch Laba Rugi
       let tempLabaRugi = await axios.get(`${tempUrl}/labaRugiLast`);
       if (tempNeracaSaldo.data[0]) {
-        alert("There's Neraca Saldo");
+        // alert("There's Neraca Saldo");
         tempLabaRugiTransaksi = await axios.get(
           `${tempUrl}/labaRugiTransaksi/${tempNeracaSaldo.data[0].kodeAccount}`
         );
@@ -124,7 +124,7 @@ const TambahAJurnalUmum = () => {
           `${tempUrl}/labaRugiTransaksiOther/${tempNeracaSaldo.data[0].kodeAccount}`
         );
       } else {
-        alert("There isn't Neraca Saldo");
+        // alert("There isn't Neraca Saldo");
         tempLabaRugiTransaksi = await axios.get(
           `${tempUrl}/labaRugiTransaksiAll`
         );
@@ -133,7 +133,7 @@ const TambahAJurnalUmum = () => {
         );
       }
 
-      alert("HIt here");
+      // alert("HIt here");
 
       // Patch Harta dan Kewajiban
       // Harta
@@ -142,15 +142,15 @@ const TambahAJurnalUmum = () => {
         parseInt(kelompokAccount) <= 110
       ) {
         // Harta Lancar
-        alert("Harta Lancar");
-        alert(tempHartaLancarOther);
+        // alert("Harta Lancar");
+        // alert(tempHartaLancarOther);
         if (tempHartaLancar.data[0]) {
-          alert("There's harta lancar");
+          // alert("There's harta lancar");
           tempTotalHarta =
             tempHartaLancar.data[0].total +
             (parseInt(debet) - parseInt(kredit));
         } else {
-          alert("There isn't harta lancar");
+          // alert("There isn't harta lancar");
           tempTotalHarta = parseInt(debet) - parseInt(kredit);
         }
         tempHartaLancarOther.data.push({
@@ -159,7 +159,7 @@ const TambahAJurnalUmum = () => {
           kelompokAccount,
           total: tempTotalHarta
         });
-        alert("Harta Lancar Push");
+        // alert("Harta Lancar Push");
         await axios.patch(`${tempUrl}/hartas/${tempHarta.data[0]._id}`, {
           hartaLancar: tempHartaLancarOther.data,
           hartaTetap: tempHartaTetapAll.data,
@@ -170,13 +170,13 @@ const TambahAJurnalUmum = () => {
           totalHarta:
             tempHarta.data[0].totalHarta + (parseInt(debet) - parseInt(kredit))
         });
-        alert("Harta lancar Patch");
+        // alert("Harta lancar Patch");
       } else if (
         parseInt(kelompokAccount) >= 120 &&
         parseInt(kelompokAccount) <= 129
       ) {
         // Harta Tetap
-        alert("Harta Tetap");
+        // alert("Harta Tetap");
         if (tempHartaLancar.data[0]) {
           tempTotalHarta =
             tempHartaTetap.data[0].total + parseInt(debet) - parseInt(kredit);
@@ -204,7 +204,7 @@ const TambahAJurnalUmum = () => {
         parseInt(kelompokAccount) <= 211
       ) {
         // Hutang / Kewajiban
-        alert("Kewajiban");
+        // alert("Kewajiban");
         if (tempHartaLancar.data[0]) {
           tempTotalHarta =
             tempKewajiban.data[0].total + parseInt(kredit) - parseInt(debet);
@@ -245,7 +245,7 @@ const TambahAJurnalUmum = () => {
             parseInt(kelompokAccount) <= 304
           ) {
             // HPP
-            alert("Hit hpp");
+            // alert("Hit hpp");
             tempLabaRugiTransaksiOther.data.push({
               idNeracaSaldo: tempIdNeracaSaldo.data._id,
               kodeAccount,
@@ -268,7 +268,7 @@ const TambahAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
               }
             );
-            alert("Hit HPP Perubahan Modal");
+            // alert("Hit HPP Perubahan Modal");
             await axios.patch(
               `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
               {
@@ -281,7 +281,7 @@ const TambahAJurnalUmum = () => {
             parseInt(kelompokAccount) <= 320
           ) {
             // Biaya
-            alert("Masuk Biaya");
+            // alert("Masuk Biaya");
             if (!tempLabaRugiTransaksi.data.total) {
               tempLabaRugiTransaksiTotal = 0;
             } else {
@@ -296,9 +296,9 @@ const TambahAJurnalUmum = () => {
                 tempLabaRugiTransaksiTotal +
                 (parseInt(debet) - parseInt(kredit))
             });
-            alert(tempLabaRugiTransaksiOther);
-            alert(tempLabaRugiTransaksiOther.data);
-            alert(tempLabaRugiTransaksiOther.data[0]);
+            // alert(tempLabaRugiTransaksiOther);
+            // alert(tempLabaRugiTransaksiOther.data);
+            // alert(tempLabaRugiTransaksiOther.data[0]);
             await axios.patch(
               `${tempUrl}/labaRugis/${tempLabaRugi.data[0]._id}`,
               {
@@ -312,7 +312,7 @@ const TambahAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
               }
             );
-            alert("Hit Biaya Perubahan Modal");
+            // alert("Hit Biaya Perubahan Modal");
             await axios.patch(
               `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
               {
@@ -334,7 +334,7 @@ const TambahAJurnalUmum = () => {
           );
           if (kelompokAccount === "220") {
             // Kredit Modal
-            alert("Masuk Kredit Modal");
+            // alert("Masuk Kredit Modal");
             await axios.patch(
               `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
               {
@@ -373,7 +373,7 @@ const TambahAJurnalUmum = () => {
                 labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
               }
             );
-            alert("Hit Pendapatan Perubahan Modal");
+            // alert("Hit Pendapatan Perubahan Modal");
             await axios.patch(
               `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
               {
@@ -384,14 +384,14 @@ const TambahAJurnalUmum = () => {
           }
         }
       } else {
-        alert("Hit before 2");
+        // alert("Hit before 2");
         bukuBesars.filter((val, index) => {
           if (val.kode === kodeAccount) {
             tempJenisAccount = val.jenisSaldo;
           }
         });
         // Post Neraca Saldo
-        alert("Hit before 1");
+        // alert("Hit before 1");
         tempIdNeracaSaldo = await axios.post(`${tempUrl}/neracaSaldos`, {
           tanggal,
           jenisAccount: tempJenisAccount,
@@ -401,11 +401,11 @@ const TambahAJurnalUmum = () => {
           kredit
         });
         // Patch Laba Rugi
-        alert("Hit 1");
+        // alert("Hit 1");
         if (kelompokAccount === "301") {
           // KREDIT PENJUALAN
           // aaaaaaaa
-          alert("Hit kredit penjualan");
+          // alert("Hit kredit penjualan");
           tempLabaRugiTransaksiOther.data.push({
             idNeracaSaldo: tempIdNeracaSaldo.data._id,
             kodeAccount,
@@ -426,7 +426,7 @@ const TambahAJurnalUmum = () => {
               labaBersih: tempLabaRugi.data[0].labaBersih + parseInt(kredit)
             }
           );
-          alert("Hit Pendapatan Perubahan Modal");
+          // alert("Hit Pendapatan Perubahan Modal");
           await axios.patch(
             `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
             {
@@ -439,7 +439,7 @@ const TambahAJurnalUmum = () => {
           parseInt(kelompokAccount) <= 304
         ) {
           // DEBET HPP
-          alert("Hit debet hpp");
+          // alert("Hit debet hpp");
           tempLabaRugiTransaksi.data.push({
             idNeracaSaldo: tempIdNeracaSaldo.data._id,
             kodeAccount,
@@ -459,7 +459,7 @@ const TambahAJurnalUmum = () => {
               labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
             }
           );
-          alert("Hit HPP Perubahan Modal");
+          // alert("Hit HPP Perubahan Modal");
           await axios.patch(
             `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
             {
@@ -472,7 +472,7 @@ const TambahAJurnalUmum = () => {
           parseInt(kelompokAccount) <= 320
         ) {
           // DEBET BIAYA
-          alert("Hit debet biaya");
+          // alert("Hit debet biaya");
           tempLabaRugiTransaksi.data.push({
             idNeracaSaldo: tempIdNeracaSaldo.data._id,
             kodeAccount,
@@ -493,7 +493,7 @@ const TambahAJurnalUmum = () => {
               labaBersih: tempLabaRugi.data[0].labaBersih - parseInt(debet)
             }
           );
-          alert("Hit Biaya Perubahan Modal");
+          // alert("Hit Biaya Perubahan Modal");
           await axios.patch(
             `${tempUrl}/perubahanModals/${tempPerubahanModal.data[0]._id}`,
             {
@@ -503,7 +503,7 @@ const TambahAJurnalUmum = () => {
           );
         }
       }
-      alert("Hit 3");
+      // alert("Hit 3");
 
       // Post Laporan Buku Besar
       let tempLaporanBukuBesar = await axios.post(
